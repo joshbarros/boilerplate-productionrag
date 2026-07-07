@@ -5,3 +5,18 @@ __pycache__/
 .venv/
 *.log
 .DS_Store
+
+# Test fixtures & artifacts (keep PDFs, ignore generated)
+tests/fixtures/pdfs/**/*.tmp
+tests/fixtures/pdfs/**/extracted/
+
+# Eval results — keep .md (publishable), ignore raw .json
+evals/results/*.json
+
+# Docker
+infra/data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
