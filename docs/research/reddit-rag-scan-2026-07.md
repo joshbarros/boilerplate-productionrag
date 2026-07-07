@@ -1,0 +1,57 @@
+# Reddit RAG practitioner scan — 2026-07-07 (top/month, n=139 posts)
+
+## Theme frequency (posts mentioning)
+- retrieval quality: 87
+- chunking: 65
+- PDF/parsing pain: 64
+- evaluation/evals: 56
+- self-host/local: 48
+- hybrid/BM25: 48
+- agentic rag: 46
+- reranking: 34
+- cost: 32
+- hallucination: 32
+- metadata: 26
+- scale: 24
+- latency: 24
+- citations: 20
+- graphrag: 12
+- pgvector: 10
+- security/PII: 9
+- langchain (neg or pos): 9
+- qdrant: 9
+- chroma: 7
+- pinecone: 3
+- weaviate: 3
+- context engineering: 2
+
+## High-signal threads (score ≥ 20)
+- [1055▲ r/LocalLLaMA] The gap between closed and open models might be much smaller than commonly assumed, because we don’t know what closed mo
+- [242▲ r/LocalLLaMA] End of an Agony. Real production service that uses LLM to earn money my team had made and now we are so happy that it wi
+- [105▲ r/LocalLLaMA] Qwen 3.6 27B Speculative Decoding Bench: Pushing ~100 TPS on a single RTX 3090
+- [87▲ r/LocalLLaMA] Kwai-Keye/Keye-VL-2.0-30B-A3B-GGUF · Hugging Face
+- [87▲ r/LocalLLaMA] I benchmarked 8 LLMs for medical scribing. Hallucinations were rare; omissions need attention.
+- [77▲ r/Rag] We spent 3 months building enterprise AI. Here are the lessons.
+- [76▲ r/LocalLLaMA] LFM2.5-Embedding-350M &amp; LFM2.5-ColBERT-350M
+- [61▲ r/LocalLLaMA] [NEW MODEL] SupraLabs started the Any2Any model family!
+- [54▲ r/Rag] I Built an ADVANCED RAG system that actually works is harder than it looks.
+- [53▲ r/LocalLLaMA] Eff U, Arc / B70 Customers. We got ours!  -Your Sugar Baby, Intel
+- [50▲ r/Rag] We turned a 700-page document into 10 queryable skill experts. 70-90% cheaper. No context bloating. No RAG.
+- [45▲ r/Rag] fine-tuned a VLM for messy-PDF extraction, 46% → 91.1% on OmniDocBench. runs fully on your own hardware, looking for peo
+- [45▲ r/LocalLLaMA] [NEW FAMILY OF MODELS] Supra1.5 family just released!
+- [44▲ r/Rag] What actually broke when we took RAG from demo to production
+- [41▲ r/Rag] Local RAG over ~300 PDFs (AnythingLLM + Ollama): retrieval too shallow, too few sources per query. Are there better loca
+- [39▲ r/Rag] Context graph vs Knowledge graph: Why standard graph databases break down in enterprise RAG
+- [38▲ r/Rag] Google quietly dropped a new open standard for AI agents in June 2026. Most people missed it. It's called OKF.
+- [36▲ r/Rag] Knowledge graphs aren't replacing RAG. They're solving the problem RAG was never designed for
+- [35▲ r/Rag] Lets stop being stupid
+- [31▲ r/Rag] What's the biggest reason enterprise RAG projects fail?
+- [31▲ r/LLMDevs] Detecting Hallucinations and Prompt Injections in Flight: An Open-Source Governance Proxy
+- [30▲ r/Rag] Structured doc parsing pipeline for RAG - 0.3B OCR, layout detection, reading-order Markdown output
+- [27▲ r/Rag] How we index images for RAG
+- [25▲ r/Rag] Looking for a Fast, Non-LLM PDF-to-Markdown Converter for Large-Scale RAG Ingestion
+- [22▲ r/Rag] Wrote up the failure modes that kept breaking my RAG system: chunking, stale index, hybrid search, the works
+- [22▲ r/LocalLLaMA] Board where every tile is an agent
+- [21▲ r/Rag] What is the most useful RAG pipeline for you in production?
+- [21▲ r/Rag] Notes from Vector Space Day in SF: HubSpot runs 20B+ vectors self-hosted, Salesforce still runs search on Solr
+- [20▲ r/Rag] Interview System [OSS]: 204 RAG interview Q&amp;As, 12 architectures, 6 failure modes free on GitHub
