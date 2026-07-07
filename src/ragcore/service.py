@@ -205,12 +205,50 @@ class RagService:
         ]
 
     async def ingest_batch(self, file_paths: list[str]) -> list[DocumentStatusResult]:
-        """Ingest a batch of PDFs, reporting per-document status."""
-        raise NotImplementedError("Implemented in Phase 5 (US2)")
+        """Ingest a batch of PDFs, reporting per-document status.
+
+        Each file is processed independently; a failure on one file does not
+        abort the rest of the batch.
+        """
+        results: list[DocumentStatusResult] = []
+        for path in file_paths:
+            filename = path.split("/")[-1]
+            try:
+                outcome = self.ingest(path)
+                fp = outcome.get("fingerprint")
+                doc_meta = self._documents.get(fp) if fp else None
+                results.append(
+                    DocumentStatusResult(
+                        id=uuid.UUID(doc_meta["id"]) if doc_meta else uuid.UUID(int=0),
+                        filename=filename,
+                        status=outcome["status"],
+                        page_count=doc_meta["page_count"] if doc_meta else 0,
+                    )
+                )
+            except Exception as exc:
+                results.append(
+                    DocumentStatusResult(
+                        id=uuid.UUID(int=0),
+                        filename=filename,
+                        status="failed",
+                        page_count=0,
+                        failure_reason=str(exc),
+                    )
+                )
+        return results
 
     async def document_status(self, document_id: uuid.UUID) -> DocumentStatusResult:
-        """Return ingestion status for a single document."""
-        raise NotImplementedError("Implemented in Phase 5 (US2)")
+        """Return ingestion status for a single document by its UUID."""
+        doc_id_str = str(document_id)
+        for meta in self._documents.values():
+            if meta["id"] == doc_id_str:
+                return DocumentStatusResult(
+                    id=document_id,
+                    filename=meta["filename"],
+                    status="succeeded",
+                    page_count=meta["page_count"],
+                )
+        raise KeyError(f"Document {document_id} not found")
 
     async def budget_status(self) -> BudgetStatusResult:
         """Return current budget ledger snapshot."""
