@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     # OpenRouter (OpenAI-compatible API at https://openrouter.ai/api/v1)
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
     openrouter_default_model: str = "nvidia/nemotron-3-ultra-550b-a55b:free"
+    # "none" = skip reasoning chain → fast clean JSON; "low"/"high" for complex tasks
+    openrouter_reasoning_effort: str = "none"
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "qwen3:8b"
 
