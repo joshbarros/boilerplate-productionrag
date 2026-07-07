@@ -12,6 +12,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Provider(StrEnum):
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    OPENROUTER = "openrouter"
     OLLAMA = "ollama"
 
 
@@ -38,12 +39,16 @@ class Settings(BaseSettings):
     # ─── LLM Providers ───
     openai_api_key: str = ""
     anthropic_api_key: str = ""
+    openrouter_api_key: str = ""
 
     # ─── Generation routing ───
-    default_provider: Provider = Provider.ANTHROPIC
+    default_provider: Provider = Provider.OPENROUTER
     anthropic_default_model: str = "claude-haiku-4-5-20251001"
     anthropic_escalation_model: str = "claude-sonnet-4-6"
     openai_default_model: str = "gpt-4o-mini"
+    # OpenRouter (OpenAI-compatible API at https://openrouter.ai/api/v1)
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+    openrouter_default_model: str = "nvidia/nemotron-3-ultra-550b-a55b:free"
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "qwen3:8b"
 
