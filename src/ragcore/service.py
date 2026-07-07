@@ -10,6 +10,7 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
+from ragcore.budget.ledger import BudgetExceededError, BudgetLedger, estimate_usd
 from ragcore.chunking.recursive import RecursiveChunker
 from ragcore.config import get_settings
 from ragcore.embedding.provider import Embedder, get_embedder
@@ -44,6 +45,11 @@ class RagService:
         self._keyword_search = InMemoryKeywordSearch()
         self._embedder: Embedder | None = None
         self._documents: dict[str, dict] = {}  # fingerprint → metadata
+        settings = get_settings()
+        self._ledger = BudgetLedger(
+            daily_cap_usd=settings.daily_budget_usd,
+            query_cap_usd=settings.query_budget_usd,
+        )
 
     def _get_embedder(self) -> Embedder:
         if self._embedder is None:
@@ -114,6 +120,25 @@ class RagService:
         settings = get_settings()
         top_k = top_k or settings.top_k
 
+        # 0. Budget pre-flight — estimate cost before doing any LLM work
+        #    Use a conservative 500-token estimate for the pre-call check;
+        #    actual tokens are recorded after the call.
+        preflight_tokens = 500
+        preflight_usd = estimate_usd(
+            settings.openrouter_default_model, preflight_tokens, preflight_tokens
+        )
+        try:
+            self._ledger.check(preflight_usd)
+        except BudgetExceededError as exc:
+            return AnswerResult(
+                status="rejected_budget",
+                config={
+                    "reason": str(exc),
+                    "kind": exc.kind,
+                    "cap_usd": exc.cap_usd,
+                },
+            )
+
         # 1. Embed the query
         embedder = self._get_embedder()
         query_emb = embedder.embed([question])[0]
@@ -149,6 +174,13 @@ class RagService:
 
         # 6. Generate
         gen_result = generate_answer(question, passages)
+
+        # 6a. Record actual cost in the ledger
+        self._ledger.record(
+            model=gen_result.model_used,
+            prompt_tokens=gen_result.prompt_tokens,
+            completion_tokens=gen_result.completion_tokens,
+        )
 
         # 7. Parse + verify citations + compose (cite-or-refuse)
         parsed = parse_llm_response(gen_result.text)
@@ -252,7 +284,14 @@ class RagService:
 
     async def budget_status(self) -> BudgetStatusResult:
         """Return current budget ledger snapshot."""
-        raise NotImplementedError("Implemented in Phase 6 (US4)")
+        snap = self._ledger.snapshot()
+        return BudgetStatusResult(
+            period=snap["period"],
+            scope=snap["scope"],
+            cap_usd=snap["daily_cap_usd"],
+            consumed_usd=snap["consumed_usd"],
+            rejected_count=snap["rejected_count"],
+        )
 
 
 # Singleton — both api/ and mcp_server/ import this
