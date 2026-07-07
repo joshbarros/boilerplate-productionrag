@@ -5,6 +5,15 @@ on:
     branches: [main, 001-regulatory-doc-qa]
   pull_request:
     branches: [main]
+  # Manual trigger for live-provider stress run (costs money/quota)
+  workflow_dispatch:
+    inputs:
+      live_provider:
+        description: "Run live-provider tests (requires OPENROUTER_API_KEY secret)"
+        required: false
+        default: "false"
+        type: choice
+        options: ["false", "true"]
 
 jobs:
   lint-and-test:
@@ -24,8 +33,22 @@ jobs:
       - name: Lint
         run: uv run ruff check src/ tests/
 
-      - name: Test
-        run: uv run pytest
+      - name: Test (deterministic, no network)
+        run: uv run pytest --ignore=tests/e2e_test.py
+
+  live-provider:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.live_provider == 'true' }}
+    env:
+      LIVE_PROVIDER_TEST: "1"
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.12
+      - run: uv sync --all-extras
+      - name: Live-provider stress run
+        run: uv run pytest tests/test_live_provider.py -v -s
 
   secret-scan:
     runs-on: ubuntu-latest

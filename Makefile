@@ -10,7 +10,10 @@ logs:
 	docker compose -f infra/docker-compose.yml logs -f
 
 test:
-	uv run pytest
+	uv run pytest --ignore=tests/e2e_test.py
+
+test-live:
+	LIVE_PROVIDER_TEST=1 uv run pytest tests/test_live_provider.py -v -s
 
 eval:
 	uv run python -m ragcore.evals.runner
