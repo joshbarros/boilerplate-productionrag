@@ -7,7 +7,13 @@ import pytest
 from fastmcp.exceptions import ToolError
 
 import ragcore.mcp_server.app as mcp_app
-from ragcore.types import AnswerResult, CitationResult, CostReport, SearchResult
+from ragcore.types import (
+    AnswerResult,
+    BudgetStatusResult,
+    CitationResult,
+    CostReport,
+    SearchResult,
+)
 
 
 @pytest.mark.asyncio
@@ -128,3 +134,40 @@ async def test_health_returns_provider_and_count() -> None:
     assert result["status"] == "ok"
     assert "provider" in result
     assert "documents_indexed" in result
+
+
+# ─── budget ───────────────────────────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_budget_impl_happy_path(monkeypatch) -> None:
+    token = mcp_app.get_settings().api_token
+
+    async def fake_budget_status():
+        return BudgetStatusResult(
+            period="2025-01-01",
+            scope="daily",
+            cap_usd=5.0,
+            consumed_usd=0.12,
+            rejected_count=1,
+        )
+
+    monkeypatch.setattr(mcp_app.service, "budget_status", fake_budget_status)
+
+    result = await mcp_app._budget_impl(api_token=token)
+
+    assert result["scope"] == "daily"
+    assert result["cap_usd"] == 5.0
+    assert result["consumed_usd"] == 0.12
+    assert result["rejected_count"] == 1
+    assert result["period"] == "2025-01-01"
+
+
+@pytest.mark.asyncio
+async def test_budget_impl_requires_auth() -> None:
+    with pytest.raises(ToolError) as exc:
+        await mcp_app._budget_impl(api_token=None)
+
+    payload = json.loads(str(exc.value))
+    assert payload["error"]["status_code"] == 401
+    assert payload["error"]["reason"] == "missing_auth"

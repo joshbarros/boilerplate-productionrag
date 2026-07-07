@@ -50,6 +50,10 @@ class IngestRequest(BaseModel):
     file_path: str
 
 
+class IngestBatchRequest(BaseModel):
+    file_paths: list[str]
+
+
 # ─── Routes ───
 
 
@@ -128,3 +132,39 @@ async def ingest(
     _check_auth(authorization)
     result = service.ingest(req.file_path)
     return result
+
+
+@app.post("/v1/documents/batch")
+async def ingest_batch(
+    req: IngestBatchRequest,
+    authorization: str | None = Header(None),
+):
+    """Ingest multiple PDFs, reporting per-document status."""
+    _check_auth(authorization)
+    results = await service.ingest_batch(req.file_paths)
+    return {
+        "results": [
+            {
+                "id": str(r.id),
+                "filename": r.filename,
+                "status": r.status,
+                "page_count": r.page_count,
+                "failure_reason": r.failure_reason,
+            }
+            for r in results
+        ]
+    }
+
+
+@app.get("/v1/budget")
+async def budget_status(authorization: str | None = Header(None)):
+    """Return current budget ledger snapshot (daily cap, consumed USD, rejections)."""
+    _check_auth(authorization)
+    result = await service.budget_status()
+    return {
+        "period": result.period,
+        "scope": result.scope,
+        "cap_usd": result.cap_usd,
+        "consumed_usd": result.consumed_usd,
+        "rejected_count": result.rejected_count,
+    }

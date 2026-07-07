@@ -140,6 +140,18 @@ async def _health_impl(api_token: str | None = None) -> dict[str, Any]:
     }
 
 
+async def _budget_impl(api_token: str | None = None) -> dict[str, Any]:
+    _check_auth(api_token)
+    result = await service.budget_status()
+    return {
+        "period": result.period,
+        "scope": result.scope,
+        "cap_usd": result.cap_usd,
+        "consumed_usd": result.consumed_usd,
+        "rejected_count": result.rejected_count,
+    }
+
+
 @mcp.tool(
     name="ask_documents",
     description=(
@@ -203,6 +215,17 @@ async def ingest_document(
 )
 async def health(api_token: str | None = None) -> dict[str, Any]:
     return await _health_impl(api_token=api_token)
+
+
+@mcp.tool(
+    name="budget",
+    description=(
+        "Return current budget ledger snapshot. "
+        "Includes daily cap, consumed USD, and rejection count."
+    ),
+)
+async def budget(api_token: str | None = None) -> dict[str, Any]:
+    return await _budget_impl(api_token=api_token)
 
 
 def create_http_app(path: str = "/mcp"):

@@ -77,7 +77,13 @@ async def test_list_tools_returns_all_four(monkeypatch) -> None:
         tools = await client.list_tools()
 
     names = {t.name for t in tools}
-    assert names == {"ask_documents", "search_documents", "ingest_document", "health"}
+    assert names == {
+        "ask_documents",
+        "search_documents",
+        "ingest_document",
+        "health",
+        "budget",
+    }
 
 
 # ─── health ───────────────────────────────────────────────────────────────────
@@ -252,3 +258,36 @@ async def test_ask_documents_missing_token_via_transport(monkeypatch) -> None:
     payload = json.loads(result.content[0].text)
     assert payload["error"]["status_code"] == 401
     assert payload["error"]["reason"] == "missing_auth"
+
+
+# ─── budget ────────────────────────────────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_budget_tool_via_transport(monkeypatch) -> None:
+    _build_isolated_mcp(monkeypatch)
+    token = mcp_app.get_settings().api_token
+
+    async with Client(mcp_app.mcp) as client:
+        result = await client.call_tool("budget", {"api_token": token})
+
+    data = result.data
+    assert data["scope"] == "daily"
+    assert "cap_usd" in data
+    assert "consumed_usd" in data
+    assert "rejected_count" in data
+    assert "period" in data
+
+
+@pytest.mark.asyncio
+async def test_budget_tool_rejects_bad_token(monkeypatch) -> None:
+    _build_isolated_mcp(monkeypatch)
+
+    async with Client(mcp_app.mcp) as client:
+        result = await client.call_tool(
+            "budget", {"api_token": "bad"}, raise_on_error=False
+        )
+
+    assert result.is_error
+    payload = json.loads(result.content[0].text)
+    assert payload["error"]["status_code"] == 401
