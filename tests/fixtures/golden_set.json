@@ -1,0 +1,62 @@
+{
+  "version": "1",
+  "fixture": "langchain_demo.pdf",
+  "cases": [
+    {
+      "id": "lc-001",
+      "question": "What does a Document Loader do in LangChain?",
+      "expected_status": "answered",
+      "keyword_hints": ["Document", "PDF", "load"],
+      "expected_pages": [0]
+    },
+    {
+      "id": "lc-002",
+      "question": "What fields does a LangChain Document object contain?",
+      "expected_status": "answered",
+      "keyword_hints": ["page_content", "metadata"],
+      "expected_pages": [0]
+    },
+    {
+      "id": "lc-003",
+      "question": "What are Text Splitters used for in a RAG pipeline?",
+      "expected_status": "answered",
+      "keyword_hints": ["chunks", "embedding", "retrieval"],
+      "expected_pages": [0]
+    },
+    {
+      "id": "lc-004",
+      "question": "What is the role of a vector store in LangChain?",
+      "expected_status": "answered",
+      "keyword_hints": ["retriever", "relevant", "query"],
+      "expected_pages": [0]
+    },
+    {
+      "id": "lc-005",
+      "question": "Why are PDFs important for building AI applications?",
+      "expected_status": "answered",
+      "keyword_hints": ["common", "document", "real-world"],
+      "expected_pages": [0]
+    },
+    {
+      "id": "lc-006",
+      "question": "Which Python class is used to load PDF files in LangChain?",
+      "expected_status": "answered",
+      "keyword_hints": ["PyPDFLoader"],
+      "expected_pages": [0]
+    },
+    {
+      "id": "lc-oos-001",
+      "question": "What is the capital of France?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "lc-oos-002",
+      "question": "How do I configure a PostgreSQL connection pool?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    }
+  ]
+}
