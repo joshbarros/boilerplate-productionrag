@@ -6,6 +6,15 @@ __pycache__/
 *.log
 .DS_Store
 
+# Node / monorepo
+node_modules/
+.next/
+.turbo/
+dist/
+build/
+*.tsbuildinfo
+coverage/
+
 # Test fixtures & artifacts (keep PDFs, ignore generated)
 tests/fixtures/pdfs/**/*.tmp
 tests/fixtures/pdfs/**/extracted/
