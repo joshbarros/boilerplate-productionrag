@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* ─── Design tokens — Editorial / Linear-app style ─────────────────────
+ * Source of truth: /docs/design_system.md
+ * Override shadcn defaults; never use their stock palette.
+ */
+@theme inline {
+  /* Surfaces */
+  --color-bg: #0a0a0b;
+  --color-surface: #131316;
+  --color-surface-2: #1a1a1f;
+  --color-border: #1f1f23;
+  --color-border-strong: #2a2a31;
+
+  /* Text */
+  --color-text: #ededef;
+  --color-text-muted: #8a8a93;
+  --color-text-faint: #5c5c66;
+
+  /* Accent — violet→cyan gradient (rationed; see design_system.md) */
+  --color-accent: #7c3aed;
+  --color-accent-2: #06b6d4;
+
+  /* Semantic */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Type */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────── */
+* {
+  border-color: var(--color-border);
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+/* Scrollbar — minimal */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+
+/* ─── Reusable utilities ────────────────────────────────────────────── */
+
+/* Accent gradient — only for: primary CTA, AI badge, focus ring, key stats */
+.accent-gradient {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
+}
+.accent-gradient-text {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Focus ring */
+.focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-accent);
+}
+
+/* Hairline border (no shadows) */
+.hairline {
+  border: 1px solid var(--color-border);
+}
+.hairline-strong {
+  border: 1px solid var(--color-border-strong);
+}
+
+/* Mono numeric (tabular figures) */
+.mono-num {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+/* Eyebrow label (section header, status pill) */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+/* Subtle pulse for live indicators */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Fade in for streamed content */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fade-in 200ms ease-out;
+}

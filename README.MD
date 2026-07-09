@@ -2,7 +2,7 @@
 
 Self-hosted, citation-grounded document QA. **Refuses to answer when it can't cite a real passage** — no hallucination, no fabrication, no silent failure.
 
-Built for regulatory and fiscal PDFs where every claim must trace to a source page.
+> **Monorepo** — Turborepo + pnpm. Python backend (`apps/backend`), Next.js frontend (`apps/web`).
 
 ---
 
@@ -18,21 +18,39 @@ That's what this project delivers.
 
 ```mermaid
 flowchart LR
-    User[User / Agent] -->|question| API[FastAPI / FastMCP]
+    Web[apps/web<br/>Next.js 15 + shadcn]
+    MCP[MCP Client<br/>Claude / Cursor / etc.]
+    User[User] --> Web
+    MCP --> API
+    Web -->|HTTP /v1| API[apps/backend<br/>FastAPI :8800]
     API --> Svc[RagService]
-    Svc --> Embed[Embedder<br/>text-embedding-3-small]
-    Svc --> Ret[Hybrid Retrieval<br/>vector + keyword + RRF]
-    Ret --> Vs[InMemoryVectorStore]
-    Ret --> Kw[InMemoryKeywordSearch]
-    Ret --> Fuse[reciprocal_rank_fusion]
+    Svc --> Embed[Embedder]
+    Svc --> Ret[Hybrid Retrieval]
     Svc --> LLM[OpenRouter<br/>gpt-4o-mini]
-    LLM --> Ground[Grounding<br/>parse + verify + cite-or-refuse]
-    Ground --> Cite[AnswerResult<br/>+ citations + cost]
     Svc --> Budget[BudgetLedger<br/>$5/day, $0.10/query]
-    Budget -.rejects.-> Svc
+    LLM --> Ground[Cite-or-refuse]
+    Ground --> Cite[Answer + citations]
 ```
 
-**Two surfaces, one service layer.** HTTP and MCP are thin adapters over `ragcore.service` — guarantees can't drift.
+---
+
+## Monorepo layout
+
+```
+production-rag/
+├── apps/
+│   ├── backend/         # Python — FastAPI + FastMCP + RAG pipeline
+│   │   ├── src/ragcore/ # service, api, mcp_server, retrieval, generation, budget, evals
+│   │   ├── tests/       # 68 unit/integration tests
+│   │   └── pyproject.toml
+│   └── web/             # Next.js 15 — chat UI, ingest, budget dashboard
+│       ├── src/app/     # / · /ingest · /budget
+│       ├── src/components/
+│       └── package.json
+├── docs/                # design system, eval results, limits, linkedin post
+├── turbo.json
+└── package.json         # workspace root
+```
 
 ---
 
@@ -46,10 +64,8 @@ flowchart LR
 | avg_latency | 2.9s |
 | cost | $0.00 (free OpenRouter credits) |
 
-The two in-scope failures are bullet-list questions where the model paraphrases instead of quoting — the cite-or-refuse guard correctly downgrades these to `not_found` rather than cite a fabricated excerpt.
-
 Full per-case breakdown: [docs/eval_results_v0.1.0.md](docs/eval_results_v0.1.0.md)
-Reproduce: `EVAL_TEST=1 uv run pytest tests/test_phase7_evals.py -v -s`
+Reproduce: `pnpm --filter @production-rag/backend test:eval`
 
 ---
 
@@ -57,26 +73,52 @@ Reproduce: `EVAL_TEST=1 uv run pytest tests/test_phase7_evals.py -v -s`
 
 ### HTTP API (port 8800)
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| GET | `/v1/health` | Liveness + provider + doc count |
-| POST | `/v1/ask` | Grounded answer with citations |
-| POST | `/v1/search` | Retrieval-only ranked chunks |
-| POST | `/v1/documents` | Ingest a single PDF |
-| POST | `/v1/documents/batch` | Ingest multiple PDFs, per-doc status |
-| GET | `/v1/budget` | Daily budget snapshot |
-
-Auth: `Authorization: Bearer ${API_TOKEN}`
+`/v1/health` · `/v1/ask` · `/v1/search` · `/v1/documents` · `/v1/documents/batch` · `/v1/budget`
 
 ### MCP (port 8801, streamable-http)
 
-| Tool | Purpose |
-| --- | --- |
-| `ask_documents` | Same as POST /v1/ask |
-| `search_documents` | Same as POST /v1/search |
-| `ingest_document` | Ingest a single PDF |
-| `health` | Liveness |
-| `budget` | Same as GET /v1/budget |
+`ask_documents` · `search_documents` · `ingest_document` · `health` · `budget`
+
+### Web UI (port 3000)
+
+- `/` — Chat with citation rail
+- `/ingest` — PDF ingest (single + batch)
+- `/budget` — Daily ledger dashboard
+
+---
+
+## Quickstart
+
+```bash
+git clone https://github.com/joshbarros/boilerplate-productionrag.git
+cd boilerplate-productionrag
+pnpm install
+cp apps/backend/.env.example apps/backend/.env
+# Edit apps/backend/.env: set OPENROUTER_API_KEY, OPENAI_API_KEY, API_TOKEN
+
+# Run everything
+pnpm dev          # turbo runs both apps in parallel
+
+# Or individually
+pnpm --filter @production-rag/backend dev   # FastAPI :8800
+pnpm --filter @production-rag/web dev       # Next.js :3000
+
+# Tests
+pnpm test                              # runs all
+pnpm --filter @production-rag/backend test          # backend only (68 tests)
+pnpm --filter @production-rag/backend test:eval     # live OpenRouter eval (8 cases)
+```
+
+---
+
+## Design system
+
+Editorial / Linear-app style. Dark surface, monospace for data, serif for emphasis, sharp micro-interactions. Full spec in [docs/design_system.md](docs/design_system.md).
+
+- **Type**: Inter (sans) · Instrument Serif (display, italic) · JetBrains Mono (data)
+- **Palette**: `#0A0A0B` bg · `#7C3AED → #06B6D4` accent gradient (rationed)
+- **Surface**: hairline borders, no shadows
+- **Motion**: 150–250ms ease-out, no springs
 
 ---
 
@@ -92,70 +134,12 @@ Auth: `Authorization: Bearer ${API_TOKEN}`
 | 7 | Golden-set eval suite (8 cases), scorer, runner | ✓ |
 | 7.5 | Fuzzy citation verification (≥70% word overlap) | ✓ |
 | 8 | Polish + ship | ✓ |
+| 9 | **Monorepo (Turborepo + pnpm) + Next.js frontend** | ✓ |
 
 What's **deferred** (in design, not built):
 - pgvector backend (in-memory now)
-- bge-reranker cross-encoder (vector+keyword only)
+- bge-reranker cross-encoder
 - Qdrant backend comparison
 - 500k-chunk scale validation
 
 See [docs/limits.md](docs/limits.md) for graceful-degradation behavior.
-
----
-
-## Quickstart
-
-```bash
-git clone <repo>
-cd production-rag
-uv sync
-cp .env.example .env
-# Edit .env: set OPENROUTER_API_KEY and API_TOKEN
-make api      # FastAPI on :8800
-make mcp      # FastMCP on :8801
-make test     # 54 passed, 5 skipped (live/eval gated)
-make eval     # 8-case golden set, gated on EVAL_TEST=1
-```
-
----
-
-## Configuration
-
-All knobs are env-driven (`.env`):
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `OPENAI_API_KEY` | "" | Embeddings (text-embedding-3-small) |
-| `OPENROUTER_API_KEY` | "" | LLM generation |
-| `OPENROUTER_DEFAULT_MODEL` | `openai/gpt-4o-mini` | Generation model |
-| `OPENROUTER_REASONING_EFFORT` | `none` | `none`/`low`/`high` |
-| `API_TOKEN` | (required) | HTTP + MCP auth |
-| `DAILY_BUDGET_USD` | 5.00 | Per-day cost cap |
-| `QUERY_BUDGET_USD` | 0.10 | Per-query cost cap |
-| `OCR_ENABLED` | true | Docling fallback for scanned PDFs |
-| `MCP_PORT` | 8801 | MCP listen port |
-| `API_PORT` | 8800 | API listen port |
-
----
-
-## Repo layout
-
-```
-src/ragcore/
-├── service.py           # The only thing API and MCP call
-├── api/app.py           # FastAPI HTTP surface
-├── mcp_server/app.py    # FastMCP tool surface
-├── ingestion/loader.py  # PyMuPDF + Docling OCR
-├── chunking/recursive.py
-├── embedding/provider.py
-├── retrieval/{fts, fusion, vector_pg}.py
-├── generation/{router, prompts, grounding}.py
-├── budget/ledger.py     # Daily/query cap enforcement
-└── evals/               # Golden set + scorer + runner
-```
-
----
-
-## License
-
-See [LICENSE](LICENSE).
