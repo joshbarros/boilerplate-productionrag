@@ -41,6 +41,13 @@ export const NICHES: Niche[] = (() => {
         enabled: true,
         description: "PubMed Central literature",
       },
+      {
+        key: "legal",
+        label: "Legal",
+        backend: "http://localhost:8820",
+        enabled: true,
+        description: "US case law (CourtListener)",
+      },
     ];
   }
   try {
