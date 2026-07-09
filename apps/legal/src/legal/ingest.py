@@ -17,17 +17,38 @@ from legal.courtlistener import fetch_and_save
 
 
 # Mix of landmark cases + doctrinal queries
+# Use case names when possible — the free CourtListener search ranks
+# case-name matches higher than doctrinal keyword matches.
 DEFAULT_QUERIES = [
-    "fair use copyright 17 USC 107",
-    "Miranda v Arizona warning rights",
-    "Chevron deference agency interpretation",
-    "qualified immunity police excessive force",
-    "Fourth Amendment unreasonable search",
-    "Lemon test establishment clause",
-    "due process procedural",
-    "antitrust Sherman Act rule of reason",
-    "Title VII disparate impact employment discrimination",
-    "patent obviousness Alice",
+    # Fair use
+    "Campbell v Acuff-Rose Music fair use parody",
+    "fair use copyright 17 USC 107 four factors",
+    "Authors Guild v Google book scanning fair use",
+    # Miranda
+    "Miranda v Arizona 384 US 436 warning rights",
+    "Miranda rights Fifth Amendment self-incrimination",
+    "Edwards v Arizona right to counsel",
+    # Chevron
+    "Chevron U.S.A. v Natural Resources Defense Council 1984",
+    "Chevron deference agency interpretation reasonable",
+    "Auer v Robbins agency interpretation",
+    # 4A
+    "Carroll v United States automobile exception probable cause",
+    "Fourth Amendment unreasonable search vehicle",
+    "Terry v Ohio stop and frisk",
+    # Lemon
+    "Lemon v Kurtzman establishment clause three prongs",
+    "Lemon test secular purpose entanglement",
+    "Wallace v Jaffree establishment clause",
+    # 1983
+    "Monell v Department Social Services 1983",
+    "42 USC 1983 color of law",
+    "Section 1983 municipal liability",
+    # Other doctrines
+    "Sherman Act rule of reason antitrust",
+    "Alice Corp v CLS Bank patent abstract idea",
+    "Title VII disparate impact employment",
+    "due process procedural fourteenth amendment",
 ]
 
 

@@ -1,13 +1,12 @@
-# People <mark>v</mark>. <mark>Miranda</mark>-Guerrero
+# People v. <mark>Miranda</mark>-Guerrero
 
-Respondent,
-                           v.
+v.
             VICTOR M. MIRANDA-GUERRERO,
-                Defendant
+                Defendant and Appellant
 
 ---
 
-**Citation:** 519 P.3d 1004; 301 Cal. Rptr. 3d 15; 14 Cal. 5th 1
+**Citation:** 14 Cal. <mark>5th</mark> 1
 **Court:** California Supreme Court
 **Date Filed:** 2022-11-17
 **Docket Number:** S118147

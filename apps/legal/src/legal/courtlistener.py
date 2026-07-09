@@ -28,8 +28,12 @@ TOKEN = os.getenv("COURTLISTENER_API_KEY", "")  # optional but recommended
 
 
 def _throttle() -> None:
-    """CourtListener is polite. Without a token: keep it light."""
-    time.sleep(2.0 if not TOKEN else 0.5)
+    """CourtListener is polite. Without a token: keep it light.
+
+    Unauth rate limit is ~1 req/sec. With a token it's 5/min, 50/hr,
+    125/day — still slow. 3s is a safe default.
+    """
+    time.sleep(3.0 if not TOKEN else 0.5)
 
 
 def _get(url: str) -> dict:
@@ -70,8 +74,19 @@ def search(query: str, max_results: int = 10) -> list[dict]:
     return data.get("results", [])[:max_results]
 
 
-def to_markdown(result: dict) -> str:
-    """Render a CourtListener result as a Markdown document for ingestion."""
+def to_markdown(result: dict, full_text: str | None = None) -> str:
+    """Render a CourtListener result as a Markdown document for ingestion.
+
+    Layout is opinion-first, metadata-last. This matters for the
+    chunker: the recursive chunker splits on \\n\\n, so we want
+    the substantive opinion text to land in the FIRST chunk, not
+    the metadata header. The legal domain cares about the opinion
+    body; the citation block is reference material.
+
+    full_text: optional richer text fetched separately (e.g., opinion
+    plain_text from a follow-up call). If provided, it is used as the
+    primary body and the snippets are dropped.
+    """
     case_name = result.get("caseName", "Unknown Case")
     citations = result.get("citation", [])
     cite_str = "; ".join(citations) if citations else "n/a"
@@ -80,30 +95,41 @@ def to_markdown(result: dict) -> str:
     cluster_id = result.get("cluster_id", "?")
     docket = result.get("docketNumber", "n/a")
 
-    # collect all opinion snippets (the substantive content)
-    opinions = result.get("opinions", [])
-    body_parts = [
-        f"# {case_name}",
-        "",
-        f"**Citation:** {cite_str}",
-        f"**Court:** {court}",
-        f"**Date Filed:** {date}",
-        f"**Docket Number:** {docket}",
-        f"**CourtListener Cluster ID:** {cluster_id}",
-        f"**Source:** CourtListener (Free Law Project, open access)",
-        "",
-        "## Opinion Text",
-        "",
-    ]
-    for i, op in enumerate(opinions, 1):
-        snippet = _strip_mark(op.get("snippet", ""))
-        if not snippet:
-            continue
-        author = op.get("author_str") or "Court"
-        body_parts.append(f"### Excerpt {i} ({author})")
+    # Build the body
+    body_parts: list[str] = []
+
+    if full_text:
+        # Fetched separately — use it verbatim
+        body_parts.append(f"# {case_name}")
         body_parts.append("")
-        body_parts.append(snippet)
+        body_parts.append(full_text.strip())
         body_parts.append("")
+    else:
+        # Fall back to snippets. Combine all opinion snippets into one
+        # continuous block so the chunker doesn't split them across chunks.
+        snippets: list[str] = []
+        for op in result.get("opinions", []):
+            text = _strip_mark(op.get("snippet", ""))
+            if text:
+                snippets.append(text)
+        body_parts.append(f"# {case_name}")
+        body_parts.append("")
+        if snippets:
+            body_parts.append("\n\n".join(snippets))
+            body_parts.append("")
+        else:
+            body_parts.append("(no opinion text available)")
+            body_parts.append("")
+
+    # Metadata at the end — won't be in the primary retrieval chunks
+    body_parts.append("---")
+    body_parts.append("")
+    body_parts.append(f"**Citation:** {cite_str}")
+    body_parts.append(f"**Court:** {court}")
+    body_parts.append(f"**Date Filed:** {date}")
+    body_parts.append(f"**Docket Number:** {docket}")
+    body_parts.append(f"**CourtListener Cluster ID:** {cluster_id}")
+    body_parts.append(f"**Source:** CourtListener (Free Law Project, open access)")
 
     return "\n".join(body_parts)
 
