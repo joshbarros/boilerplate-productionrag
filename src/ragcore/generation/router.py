@@ -93,7 +93,7 @@ def _call_openrouter(
 
     return GenerationResult(
         text=content,
-        model_used=response.model,
+        model_used=response.model or model,
         prompt_tokens=response.usage.prompt_tokens if response.usage else 0,
         completion_tokens=response.usage.completion_tokens if response.usage else 0,
         latency_ms=0,  # set by caller

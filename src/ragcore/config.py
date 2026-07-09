@@ -4,9 +4,13 @@ from __future__ import annotations
 
 from enum import StrEnum
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Project root = parent of src/ragcore/ → resolves to the production-rag dir
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 class Provider(StrEnum):
@@ -31,7 +35,7 @@ class Settings(BaseSettings):
     """All configuration loaded from environment variables / .env file."""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(_PROJECT_ROOT / ".env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )

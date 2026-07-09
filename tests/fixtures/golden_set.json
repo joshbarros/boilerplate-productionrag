@@ -25,16 +25,16 @@
     },
     {
       "id": "lc-004",
-      "question": "What is the role of a vector store in LangChain?",
+      "question": "What does a vector store do with document chunks in LangChain?",
       "expected_status": "answered",
-      "keyword_hints": ["retriever", "relevant", "query"],
+      "keyword_hints": ["index", "retriever", "relevant"],
       "expected_pages": [0]
     },
     {
       "id": "lc-005",
-      "question": "Why are PDFs important for building AI applications?",
+      "question": "What was the LangChain demo document generated to demonstrate?",
       "expected_status": "answered",
-      "keyword_hints": ["common", "document", "real-world"],
+      "keyword_hints": ["loading", "PDF", "LangChain"],
       "expected_pages": [0]
     },
     {

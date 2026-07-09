@@ -51,6 +51,8 @@ def estimate_usd(model: str, prompt_tokens: int, completion_tokens: int) -> floa
     Returns:
         Estimated cost in USD (may be 0.0 for free models).
     """
+    if not model:
+        return 0.0
     model_lower = model.lower()
     in_rate, out_rate = _FALLBACK_RATE
     for prefix, ir, or_ in _RATES:
