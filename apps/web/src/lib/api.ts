@@ -1,16 +1,48 @@
-// Thin client to the Python backend (apps/backend → apps/web)
-// Routes through Next.js rewrites in dev (see next.config.js).
-// In prod, the backend sits behind the same domain via reverse proxy.
+// Thin client to the Python backend (packages/core → apps/web).
+// Multi-niche: each niche has its own backend URL (see niches.ts).
+// The active niche is selected via a runtime context (see api-context.tsx).
 
 import type { AnswerResult, BudgetStatus, DocumentStatus } from "./types";
+import { NICHES, DEFAULT_NICHE, type Niche } from "./niches";
 
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || ""; // empty → use /api/backend proxy
 const TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || "";
 
 type AskInput = { question: string; top_k?: number };
 
+let _active: Niche = NICHES[0] ?? {
+  key: "core",
+  label: "Core",
+  backend: "/api/backend",
+  enabled: true,
+};
+
+export function getActiveNiche(): Niche {
+  if (typeof window !== "undefined") {
+    const stored = window.localStorage.getItem("activeNiche");
+    if (stored) {
+      const found = NICHES.find((n) => n.key === stored && n.enabled);
+      if (found) _active = found;
+    }
+  }
+  return _active;
+}
+
+export function setActiveNiche(key: string) {
+  const found = NICHES.find((n) => n.key === key && n.enabled);
+  if (!found) return;
+  _active = found;
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem("activeNiche", key);
+  }
+}
+
 function url(path: string): string {
-  return BACKEND ? `${BACKEND}/v1${path}` : `/api/backend${path}`;
+  const niche = getActiveNiche();
+  // For relative backends (proxied), prepend the niche prefix
+  if (niche.backend.startsWith("/")) {
+    return `${niche.backend}${path}`;
+  }
+  return `${niche.backend}/v1${path}`;
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {

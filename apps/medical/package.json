@@ -1,0 +1,12 @@
+{
+  "name": "@production-rag/medical",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Medical niche — PubMed Central literature Q&A",
+  "scripts": {
+    "dev": "uv run uvicorn medical.app:app --host 127.0.0.1 --port 8810",
+    "ingest": "uv run python -m medical.ingest --out ./corpus",
+    "golden": "uv run python -m medical.golden ./golden_set.json",
+    "lint": "uv run ruff check src/"
+  }
+}
