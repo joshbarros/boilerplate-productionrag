@@ -2318,7 +2318,7 @@ wheels = [
 ]
 
 [[package]]
-name = "production-rag"
+name = "production-rag-core"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

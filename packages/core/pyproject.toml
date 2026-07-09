@@ -1,7 +1,7 @@
 [project]
-name = "production-rag"
+name = "production-rag-core"
 version = "0.1.0"
-description = "Self-hosted, citation-grounded document QA for messy regulatory/fiscal PDFs"
+description = "Self-hosted, citation-grounded document QA engine — shared by all niche apps"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi>=0.115.0",
