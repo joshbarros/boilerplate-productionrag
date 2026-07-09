@@ -7,7 +7,7 @@ Auth: Bearer token (single shared key v1).
 from __future__ import annotations
 
 from fastapi import FastAPI, Header, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from ragcore.config import get_settings
 from ragcore.service import service
@@ -39,11 +39,27 @@ class AskRequest(BaseModel):
     top_k: int | None = None
     config_override: dict | None = None
 
+    @field_validator("question")
+    @classmethod
+    def _non_empty(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("question must be non-empty")
+        return v
+
 
 class SearchRequest(BaseModel):
     query: str
     top_k: int = 8
     mode: str = "hybrid"
+
+    @field_validator("query")
+    @classmethod
+    def _non_empty(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("query must be non-empty")
+        return v
 
 
 class IngestRequest(BaseModel):
