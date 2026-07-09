@@ -1,0 +1,6 @@
+{
+  "name": "@production-rag/legal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Legal niche — US case law Q&A via CourtListener"
+}
