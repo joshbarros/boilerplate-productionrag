@@ -30,8 +30,9 @@ The honest answer was always: "you run the same 8 questions and check." So I bui
 
 **The thing I want to push back on:** every RAG demo looks great on a single document. The hard part is making it **admit when it doesn't know** and **proving it does the right thing on demand**. That's what the eval suite is for. That's what gets you trust in production.
 
-GitHub: <link to repo>
-Eval results: <link to docs/eval_results_v0.1.0.md>
-Limits & graceful degradation: <link to docs/limits.md>
+GitHub: https://github.com/joshbarros/boilerplate-productionrag
+Release: https://github.com/joshbarros/boilerplate-productionrag/releases/tag/v0.1.0
+Eval results: https://github.com/joshbarros/boilerplate-productionrag/blob/v0.1.0/docs/eval_results_v0.1.0.md
+Limits: https://github.com/joshbarros/boilerplate-productionrag/blob/v0.1.0/docs/limits.md
 
 #RAG #LLM #MLOps #OpenSource
