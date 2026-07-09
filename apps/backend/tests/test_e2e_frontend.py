@@ -11,8 +11,8 @@ from __future__ import annotations
 import json
 import sys
 import time
-import urllib.request
 import urllib.error
+import urllib.request
 from pathlib import Path
 
 API = "http://127.0.0.1:8800"
@@ -31,7 +31,10 @@ def call(method: str, path: str, body: dict | None = None) -> tuple[int, dict]:
     req = urllib.request.Request(
         f"{API}{path}",
         method=method,
-        headers={"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"},
+        headers={
+            "Authorization": f"Bearer {TOKEN}",
+            "Content-Type": "application/json",
+        },
         data=json.dumps(body).encode() if body else None,
     )
     try:
@@ -72,7 +75,11 @@ def main() -> int:
     code, body = call("GET", "/v1/health")
     if code != 200:
         fail(f"HTTP {code}: {body}")
-    ok(f"provider={body.get('provider')} model={body.get('model')} docs={body.get('documents_indexed')}")
+    ok(
+        f"provider={body.get('provider')} "
+        f"model={body.get('model')} "
+        f"docs={body.get('documents_indexed')}"
+    )
 
     # 2. Ingest the fixture PDF
     banner("2. /v1/documents — ingest fixture")
@@ -131,12 +138,19 @@ def main() -> int:
     consumed = body.get("consumed_usd", 0)
     cap = body.get("cap_usd", 0)
     pct = (consumed / cap * 100) if cap else 0
-    ok(f"${consumed:.6f} / ${cap:.2f} ({pct:.4f}%) rejected={body.get('rejected_count')}")
+    ok(
+        f"${consumed:.6f} / ${cap:.2f} ({pct:.4f}%) "
+        f"rejected={body.get('rejected_count')}"
+    )
 
     # 6. Search-only
     banner("6. /v1/search — retrieval-only")
     step("Q: LangChain")
-    code, body = call("POST", "/v1/search", {"query": "LangChain Document Loader", "top_k": 3})
+    code, body = call(
+        "POST",
+        "/v1/search",
+        {"query": "LangChain Document Loader", "top_k": 3},
+    )
     if code != 200:
         fail(f"HTTP {code}: {body}")
     results = body.get("results", [])
