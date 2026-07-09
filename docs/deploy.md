@@ -45,8 +45,8 @@ for viral moments.
 # .env (root of repo)
 OPENAI_API_KEY=sk-...        # for embeddings (any OpenAI key works)
 OPENROUTER_API_KEY=sk-or-...  # for free models (optional but recommended)
-OPENROUTER_DEFAULT_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free
-API_TOKEN=changeme            # shared between medical and legal
+OPENROUTER_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b:free
+API_TOKEN=changeme            # shared between medical, legal, accounting
 ```
 
 The repo's `.env.example` ships with these values. The free model

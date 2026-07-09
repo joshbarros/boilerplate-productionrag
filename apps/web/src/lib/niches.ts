@@ -48,6 +48,13 @@ export const NICHES: Niche[] = (() => {
         enabled: true,
         description: "US case law (CourtListener)",
       },
+      {
+        key: "accounting",
+        label: "Accounting",
+        backend: "http://localhost:8830",
+        enabled: true,
+        description: "US public-company filings (SEC EDGAR)",
+      },
     ];
   }
   try {
