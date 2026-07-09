@@ -73,10 +73,19 @@ def _build_medical_prompt(question: str, passages: list[dict]) -> list[dict]:
             "content": (
                 f"Passages:\n\n"
                 + "\n\n---\n\n".join(
-                    f"[PMID:{p.get('document_id', '?')}] {p['text']}" for p in passages
+                    f"[chunk_id={p.get('chunk_id', '?')}] [PMID:{p.get('document_id', '?')}]\n"
+                    f"{p['text']}"
+                    for p in passages
                 )
-                + f"\n\nQuestion: {question}\n\nRespond in JSON with "
-                '"status", "answer", "citations": [{"pmid": ..., "excerpt": ...}]'
+                + f"\n\nQuestion: {question}\n\nRespond in JSON with this exact schema:\n"
+                '{"status": "answered" or "not_found",\n'
+                ' "answer": "string",\n'
+                ' "citations": [{"chunk_id": "<the chunk_id from the passage you used>", '
+                '"excerpt": "<a short verbatim quote from that passage>", "page": 0}]}\n'
+                "\nRules:\n"
+                '- Citations MUST include the exact chunk_id you saw in the passages block\n'
+                "- excerpt MUST be a verbatim substring of that passage\n"
+                '- If passages don\'t support an answer, status="not_found" and answer=null'
             ),
         },
     ]
