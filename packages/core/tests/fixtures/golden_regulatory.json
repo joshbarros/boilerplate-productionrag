@@ -1,0 +1,590 @@
+{
+  "version": "1",
+  "fixture": "regulatory_corpus",
+  "cases": [
+    {
+      "id": "reg-001",
+      "question": "Qual o objetivo da Circular BACEN 3.978/2020?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "lavagem",
+        "dinheiro",
+        "Circular",
+        "BACEN"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-002",
+      "question": "O que significa KYC na pol\u00edtica PLD do BACEN?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "cliente",
+        "cadastrais",
+        "risco"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-003",
+      "question": "Para quem as institui\u00e7\u00f5es devem comunicar opera\u00e7\u00f5es suspeitas?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "COAF",
+        "suspeitas",
+        "opera\u00e7\u00f5es"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-004",
+      "question": "Quem deve aprovar a pol\u00edtica PLD na institui\u00e7\u00e3o?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "alta",
+        "administra\u00e7\u00e3o",
+        "diretor"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-005",
+      "question": "Qual lei baseia as san\u00e7\u00f5es por descumprimento de PLD mencionadas?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "9.613",
+        "multas",
+        "BACEN"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-006",
+      "question": "O que regula a Instru\u00e7\u00e3o CVM 555?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "fundos",
+        "investimento"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-007",
+      "question": "Quais s\u00e3o as principais classes de fundos na CVM 555?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "renda fixa",
+        "a\u00e7\u00f5es",
+        "multimercado"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-008",
+      "question": "Quais deveres o administrador fiduci\u00e1rio tem sob a CVM 555?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "administrador",
+        "regulamento",
+        "fundo"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-009",
+      "question": "What does cotista mean in the CVM glossary?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "Cotista",
+        "unit",
+        "holder",
+        "Fund"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-010",
+      "question": "Quais princ\u00edpios regem o tratamento de dados na LGPD?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "finalidade",
+        "transpar\u00eancia",
+        "seguran\u00e7a"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-011",
+      "question": "Quais s\u00e3o bases legais de tratamento na LGPD?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "consentimento",
+        "contrato",
+        "leg\u00edtimo"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-012",
+      "question": "Quais direitos o titular tem sob a LGPD?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "acesso",
+        "corre\u00e7\u00e3o",
+        "elimina\u00e7\u00e3o"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-013",
+      "question": "O que \u00e9 o encarregado de dados na LGPD?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "encarregado",
+        "dados",
+        "DPO",
+        "tratamento"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-014",
+      "question": "Quando incidentes de seguran\u00e7a devem ser comunicados na LGPD?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "ANPD",
+        "titulares"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-015",
+      "question": "Quem pode optar pelo Simples Nacional?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "microempresas",
+        "EPP",
+        "receita"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-016",
+      "question": "O que \u00e9 o DAS no Simples Nacional?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "Documento",
+        "Arrecada\u00e7\u00e3o"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-017",
+      "question": "Quais tributos podem ser unificados no Simples Nacional?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "IRPJ",
+        "ICMS",
+        "ISS"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-018",
+      "question": "O que s\u00e3o sublimites de ICMS e ISS no Simples?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "receita",
+        "DAS"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-019",
+      "question": "What is the core principle of ASC 606 revenue recognition?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "transfer",
+        "customer",
+        "consideration"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-020",
+      "question": "What are the five steps of the ASC 606 model?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "contract",
+        "performance",
+        "transaction",
+        "price"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-021",
+      "question": "When does a contract exist under ASC 606?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "contract",
+        "approved",
+        "collection",
+        "probable"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-022",
+      "question": "How is variable consideration estimated under ASC 606?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "expected",
+        "value",
+        "most likely"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-023",
+      "question": "What must lessees recognize under ASC 842?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "right-of-use",
+        "lease liability"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-024",
+      "question": "How is the lease liability initially measured under ASC 842?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "present value",
+        "lease payments"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-025",
+      "question": "What is a finance lease under ASC 842?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "Finance",
+        "lease",
+        "ownership",
+        "purchase"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-026",
+      "question": "What is the short-term lease exemption in ASC 842?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "12 months",
+        "ROU"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-027",
+      "question": "How often should PLD training occur according to the BACEN circular?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "Treinamento",
+        "colaboradores",
+        "anualmente",
+        "PLD"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-028",
+      "question": "What English term maps to gestor in the CVM glossary?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "Gestor",
+        "Portfolio",
+        "manager"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-029",
+      "question": "Which number is the LGPD statute?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "13.709",
+        "LGPD",
+        "2018"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-030",
+      "question": "What complementary law governs Simples Nacional?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "123"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-031",
+      "question": "What discount rate is used if the rate implicit in the lease is not readily determinable under ASC 842?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "incremental",
+        "borrowing"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-032",
+      "question": "What does step three of ASC 606 require?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "transaction",
+        "price",
+        "step"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-033",
+      "question": "Deve a institui\u00e7\u00e3o informar o cliente investigado ao reportar ao COAF?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "sem comunicar",
+        "cliente"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-034",
+      "question": "O que \u00e9 segrega\u00e7\u00e3o patrimonial de fundos na CVM 555?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "segrega\u00e7\u00e3o",
+        "fundos"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-035",
+      "question": "Quais hip\u00f3teses permitem transfer\u00eancia internacional de dados na LGPD?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "prote\u00e7\u00e3o",
+        "salvaguardas"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-036",
+      "question": "Como a empresa pode ser exclu\u00edda do Simples Nacional?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "receita",
+        "d\u00e9bitos",
+        "vedada"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-037",
+      "question": "What is an operating lease under ASC 842?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "Operating",
+        "lease",
+        "straight-line"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-038",
+      "question": "What constraint applies to variable consideration under ASC 606?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "variable",
+        "reversal",
+        "constraint"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-039",
+      "question": "What must the ROU asset include under ASC 842 initial measurement?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "ROU",
+        "asset",
+        "liability",
+        "incentives"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-040",
+      "question": "Qual \u00f3rg\u00e3o emite a Circular sobre PLD citada no corpus?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "Banco Central",
+        "BACEN"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "reg-oos-001",
+      "question": "What is the capital of France?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-002",
+      "question": "How do I install Kubernetes on bare metal?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-003",
+      "question": "Qual a melhor receita de brigadeiro gourmet?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-004",
+      "question": "Who won the 2018 FIFA World Cup?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-005",
+      "question": "What is the market capitalization of NVIDIA today?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-006",
+      "question": "How do I configure a PostgreSQL connection pool in Django?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-007",
+      "question": "What is the weather in S\u00e3o Paulo tomorrow?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-008",
+      "question": "Write a Python script to reverse a linked list.",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-009",
+      "question": "Qual o placar do \u00faltimo jogo do Flamengo?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "reg-oos-010",
+      "question": "How much does a Tesla Model Y cost in USD right now?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    }
+  ]
+}

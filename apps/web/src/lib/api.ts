@@ -1,9 +1,8 @@
 // Thin client to the Python backend (packages/core → apps/web).
 // Multi-niche: each niche has its own backend URL (see niches.ts).
-// The active niche is selected via a runtime context (see api-context.tsx).
 
 import type { AnswerResult, BudgetStatus, DocumentStatus } from "./types";
-import { NICHES, DEFAULT_NICHE, type Niche } from "./niches";
+import { NICHES, type Niche } from "./niches";
 
 const TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || "";
 
@@ -38,7 +37,6 @@ export function setActiveNiche(key: string) {
 
 function url(path: string): string {
   const niche = getActiveNiche();
-  // For relative backends (proxied), prepend the niche prefix
   if (niche.backend.startsWith("/")) {
     return `${niche.backend}${path}`;
   }
@@ -46,13 +44,18 @@ function url(path: string): string {
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const headers: Record<string, string> = {
+    ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
+    ...(init.headers as Record<string, string> | undefined),
+  };
+  // Only set JSON content-type when we send a body that isn't FormData
+  if (init.body && !(init.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const res = await fetch(url(path), {
     ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
-      ...(init.headers ?? {}),
-    },
+    headers,
   });
   if (!res.ok) {
     const body = await res.text();
@@ -87,6 +90,18 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ file_paths }),
     }),
+
+  /** Multipart browser upload (PDF / md / txt). */
+  upload: (files: File[]) => {
+    const form = new FormData();
+    for (const f of files) {
+      form.append("files", f);
+    }
+    return request<{ results: DocumentStatus[] }>("/documents/upload", {
+      method: "POST",
+      body: form,
+    });
+  },
 
   budget: () => request<BudgetStatus>("/budget"),
 

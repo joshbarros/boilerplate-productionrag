@@ -3,6 +3,16 @@
 **Input**: Design documents from `/specs/001-regulatory-doc-qa/`
 **Prerequisites**: plan.md, spec.md, research.md (D1–D15), data-model.md, contracts/interfaces.md
 
+> **Status note (2026-07-13 / v0.2):** Implementation lives under `packages/core`
+> (not the original `apps/backend` layout). MVP through polish largely shipped:
+> hybrid RAG, cite-or-refuse, budget, MCP, evals, monorepo web UI, niche apps.
+> v0.2 added: Alembic `0001`, `VECTOR_BACKEND=postgres|memory`, response cache,
+> security gate, fixed chunker, document status API/MCP, Makefile path fix.
+> v0.2.2: 22-case core + **50-case regulatory** golden sets; offline eval runner
+> (`python -m ragcore.evals --mode offline --gate`); regression baseline
+> (−2pt) in CI. Still open: Qdrant matrix, full OTel dashboards, always-on
+> cross-encoder. See `docs/limits.md`.
+
 **Format**: `[ID] [P?] [Story] Description` — [P] = parallelizable (different files, no dependency). Every task names exact paths. **Every phase ends with a commit** (constitution: ship-ugly-first).
 
 ## Phase 1: Setup

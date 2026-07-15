@@ -7,6 +7,7 @@ Cheap-first routing with escalation flag (Constitution V).
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from ragcore.config import Provider, get_settings
@@ -31,6 +32,7 @@ def generate_answer(
     question: str,
     passages: list[dict],
     model_override: str | None = None,
+    prompt_builder: Callable[[str, list[dict]], list[dict]] | None = None,
 ) -> GenerationResult:
     """Generate a grounded answer using the configured provider.
 
@@ -38,12 +40,14 @@ def generate_answer(
         question: User's question.
         passages: Retrieved passages with chunk_id, page, text.
         model_override: Force a specific model (optional).
+        prompt_builder: Optional niche/custom message builder.
 
     Returns:
         GenerationResult with raw LLM output and cost data.
     """
     settings = get_settings()
-    messages = build_prompt(question, passages)
+    builder = prompt_builder or build_prompt
+    messages = builder(question, passages)
 
     start = time.perf_counter()
 

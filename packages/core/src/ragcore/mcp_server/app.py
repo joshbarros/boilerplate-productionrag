@@ -6,6 +6,7 @@ All tools call ragcore.service only (shared guarantees with API).
 from __future__ import annotations
 
 import json
+import uuid
 from typing import Any
 
 from fastmcp import FastMCP
@@ -19,7 +20,7 @@ mcp = FastMCP(
     name="Production RAG MCP",
     instructions=(
         "Grounded document QA tools with citation-first behavior. "
-        "Use ask/search/ingest/health depending on task."
+        "Use ask/search/ingest/health/budget/document_status depending on task."
     ),
 )
 
@@ -136,7 +137,8 @@ async def _health_impl(api_token: str | None = None) -> dict[str, Any]:
         "status": "ok",
         "provider": settings.default_provider.value,
         "model": settings.openrouter_default_model,
-        "documents_indexed": len(service._documents),
+        "documents_indexed": service.document_count(),
+        "backend": settings.vector_backend.value,
     }
 
 
@@ -149,6 +151,32 @@ async def _budget_impl(api_token: str | None = None) -> dict[str, Any]:
         "cap_usd": result.cap_usd,
         "consumed_usd": result.consumed_usd,
         "rejected_count": result.rejected_count,
+    }
+
+
+async def _document_status_impl(
+    document_id: str,
+    api_token: str | None = None,
+) -> dict[str, Any]:
+    _check_auth(api_token)
+    if not document_id or not document_id.strip():
+        _structured_error(
+            400, "validation", "document_id must be a non-empty UUID string"
+        )
+    try:
+        doc_uuid = uuid.UUID(document_id.strip())
+    except ValueError:
+        _structured_error(400, "validation", "document_id must be a valid UUID")
+    try:
+        result = await service.document_status(doc_uuid)
+    except KeyError:
+        _structured_error(404, "not_found", f"Document {document_id} not found")
+    return {
+        "id": str(result.id),
+        "filename": result.filename,
+        "status": result.status,
+        "page_count": result.page_count,
+        "failure_reason": result.failure_reason,
     }
 
 
@@ -226,6 +254,20 @@ async def health(api_token: str | None = None) -> dict[str, Any]:
 )
 async def budget(api_token: str | None = None) -> dict[str, Any]:
     return await _budget_impl(api_token=api_token)
+
+
+@mcp.tool(
+    name="get_document_status",
+    description=(
+        "Return ingestion status for a document UUID. "
+        "Includes filename, status, page_count, and failure_reason."
+    ),
+)
+async def get_document_status(
+    document_id: str,
+    api_token: str | None = None,
+) -> dict[str, Any]:
+    return await _document_status_impl(document_id=document_id, api_token=api_token)
 
 
 def create_http_app(path: str = "/mcp"):

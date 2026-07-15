@@ -25,33 +25,36 @@ const RAW: string = process.env.NEXT_PUBLIC_NICHES ?? "";
 
 export const NICHES: Niche[] = (() => {
   if (!RAW) {
-    // Default dev fixtures — overridden via env in prod
+    // Default dev fixtures — overridden via env in prod.
+    // Backends use same-origin proxy paths (/api/<key>) so the browser
+    // forwards the Authorization header without CORS preflight. The
+    // rewrites in next.config.js map each path to the niche's port.
     return [
       {
         key: "core",
         label: "Generic",
-        backend: "/api/backend", // proxied → http://localhost:8800
+        backend: "/api/core", // proxied → http://localhost:8800
         enabled: true,
         description: "Default RAG engine",
       },
       {
         key: "medical",
         label: "Medical",
-        backend: "http://localhost:8810",
+        backend: "/api/medical", // proxied → http://localhost:8810
         enabled: true,
         description: "PubMed Central literature",
       },
       {
         key: "legal",
         label: "Legal",
-        backend: "http://localhost:8820",
+        backend: "/api/legal", // proxied → http://localhost:8820
         enabled: true,
         description: "US case law (CourtListener)",
       },
       {
         key: "accounting",
         label: "Accounting",
-        backend: "http://localhost:8830",
+        backend: "/api/accounting", // proxied → http://localhost:8830
         enabled: true,
         description: "US public-company filings (SEC EDGAR)",
       },

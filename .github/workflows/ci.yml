@@ -39,6 +39,29 @@ jobs:
         working-directory: packages/core
         run: uv run pytest --ignore=tests/e2e_test.py --ignore=tests/test_phase5_ingestion.py
 
+      - name: Offline eval regression gate
+        working-directory: packages/core
+        run: |
+          uv run python -m ragcore.evals \
+            --golden tests/fixtures/golden_set.json \
+            --fixture tests/fixtures/langchain_demo.pdf \
+            --mode offline --gate \
+            --baseline evals/results/baseline_core_offline.json \
+            --min-pass-rate 0.70 --max-drop-pts 2.0 \
+            --out evals/results/latest_core_offline.json
+          uv run python -m ragcore.evals \
+            --golden tests/fixtures/golden_regulatory.json \
+            --fixture tests/fixtures/corpus/reg_bacen_circular.md \
+            --fixture tests/fixtures/corpus/reg_cvm_instrucao.md \
+            --fixture tests/fixtures/corpus/reg_lgpd.md \
+            --fixture tests/fixtures/corpus/reg_simples_nacional.md \
+            --fixture tests/fixtures/corpus/reg_asc606_en.md \
+            --fixture tests/fixtures/corpus/reg_asc842_en.md \
+            --mode offline --gate \
+            --baseline evals/results/baseline_regulatory_offline.json \
+            --min-pass-rate 0.70 --max-drop-pts 2.0 \
+            --out evals/results/latest_regulatory_offline.json
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         # version is pinned via root package.json "packageManager": "pnpm@9.15.0"
@@ -50,6 +73,39 @@ jobs:
       - name: Web typecheck + build
         working-directory: apps/web
         run: pnpm typecheck && pnpm build
+
+  postgres-smoke:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: ragcore
+          POSTGRES_PASSWORD: ragcore
+          POSTGRES_DB: ragcore
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ragcore"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      VECTOR_BACKEND: postgres
+      PGVECTOR_CONNECTION: postgresql+psycopg://ragcore:ragcore@localhost:5432/ragcore
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.12
+      - name: Install core
+        working-directory: packages/core
+        run: uv sync --all-extras
+      - name: Migrate
+        working-directory: packages/core
+        run: uv run alembic upgrade head
+      - name: Postgres smoke tests
+        working-directory: packages/core
+        run: uv run pytest tests/test_postgres_optional.py -v
 
   live-provider:
     runs-on: ubuntu-latest

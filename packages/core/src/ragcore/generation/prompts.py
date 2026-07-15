@@ -1,11 +1,14 @@
 """Grounded-answer prompt — answer ONLY from passages, cite chunk ids, else refuse.
 
-This prompt enforces FR-002 (citations) and FR-003 (refuse when ungrounded).
-The LLM is instructed to output structured JSON so we can parse citations
-and verify them programmatically (Constitution I: evals gate everything).
+Supports niche isolation via ``PromptBuilder`` callables passed into RagService
+or registered as the process default — no monkey-patching required.
 """
 
 from __future__ import annotations
+
+from collections.abc import Callable
+
+type PromptBuilder = Callable[[str, list[dict]], list[dict]]
 
 SYSTEM_PROMPT = (
     "You are a document QA assistant. Answer questions using ONLY the provided"
@@ -29,25 +32,76 @@ Question: {question}
 
 Respond in JSON only."""
 
+# Process-level default builder (niches should prefer RagService(prompt_builder=...))
+_default_builder: PromptBuilder | None = None
 
-def build_prompt(question: str, passages: list[dict]) -> list[dict]:
-    """Build the chat messages for the LLM.
 
-    Args:
-        question: The user's question.
-        passages: List of dicts with chunk_id, page, text.
+def set_default_prompt_builder(builder: PromptBuilder | None) -> None:
+    """Set the process-wide default prompt builder (optional convenience)."""
+    global _default_builder
+    _default_builder = builder
 
-    Returns:
-        List of message dicts for the OpenAI-compatible API.
-    """
+
+def default_build_prompt(question: str, passages: list[dict]) -> list[dict]:
+    """Core grounded-answer messages (generic corpus)."""
     passage_text = "\n\n---\n\n".join(
         f"[Passage {i + 1}] (chunk_id: {p['chunk_id']}, page: {p['page']})\n{p['text']}"
         for i, p in enumerate(passages)
     )
-
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": USER_TEMPLATE.format(
-            passages=passage_text, question=question
-        )},
+        {
+            "role": "user",
+            "content": USER_TEMPLATE.format(
+                passages=passage_text, question=question
+            ),
+        },
     ]
+
+
+def build_prompt(question: str, passages: list[dict]) -> list[dict]:
+    """Build chat messages — uses registered default builder if set."""
+    if _default_builder is not None:
+        return _default_builder(question, passages)
+    return default_build_prompt(question, passages)
+
+
+def niche_prompt_builder(
+    system_prompt: str,
+    *,
+    source_label: str = "source",
+) -> PromptBuilder:
+    """Factory for domain skins (medical / legal / accounting).
+
+    Produces a builder that keeps the same JSON citation contract as core
+    while swapping the system instructions and passage labeling.
+    """
+
+    def _builder(question: str, passages: list[dict]) -> list[dict]:
+        blocks = []
+        for p in passages:
+            cid = p.get("chunk_id", "?")
+            src = p.get("document_id", p.get("title", "?"))
+            blocks.append(
+                f"[chunk_id={cid}] [{source_label}={src}]\n{p['text']}"
+            )
+        body = (
+            "Passages:\n\n"
+            + "\n\n---\n\n".join(blocks)
+            + f"\n\nQuestion: {question}\n\n"
+            "Respond in JSON with this exact schema:\n"
+            '{"status": "answered" or "not_found",\n'
+            ' "answer": "string",\n'
+            ' "citations": [{"chunk_id": "<the chunk_id from the passage you used>", '
+            '"excerpt": "<a short verbatim quote from that passage>", "page": 0}]}\n'
+            "\nRules:\n"
+            "- Citations MUST include the exact chunk_id from passages\n"
+            "- excerpt MUST be a verbatim substring of that passage\n"
+            '- If unsupported, status="not_found" and answer=null'
+        )
+        return [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": body},
+        ]
+
+    return _builder

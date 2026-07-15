@@ -1,48 +1,209 @@
 {
-  "version": "1",
+  "version": "2",
   "fixture": "langchain_demo.pdf",
   "cases": [
     {
       "id": "lc-001",
       "question": "What does a Document Loader do in LangChain?",
       "expected_status": "answered",
-      "keyword_hints": ["Document", "PDF", "load"],
-      "expected_pages": [0]
+      "keyword_hints": [
+        "Document",
+        "PDF",
+        "load"
+      ],
+      "expected_pages": [
+        0
+      ]
     },
     {
       "id": "lc-002",
       "question": "What fields does a LangChain Document object contain?",
       "expected_status": "answered",
-      "keyword_hints": ["page_content", "metadata"],
-      "expected_pages": [0]
+      "keyword_hints": [
+        "page_content",
+        "metadata"
+      ],
+      "expected_pages": [
+        0
+      ]
     },
     {
       "id": "lc-003",
       "question": "What are Text Splitters used for in a RAG pipeline?",
       "expected_status": "answered",
-      "keyword_hints": ["chunks", "embedding", "retrieval"],
-      "expected_pages": [0]
+      "keyword_hints": [
+        "chunks",
+        "embedding",
+        "retrieval"
+      ],
+      "expected_pages": [
+        0
+      ]
     },
     {
       "id": "lc-004",
       "question": "What does a vector store do with document chunks in LangChain?",
       "expected_status": "answered",
-      "keyword_hints": ["index", "retriever", "relevant"],
-      "expected_pages": [0]
+      "keyword_hints": [
+        "vector",
+        "chunks",
+        "relevant"
+      ],
+      "expected_pages": [
+        0
+      ]
     },
     {
       "id": "lc-005",
       "question": "What was the LangChain demo document generated to demonstrate?",
       "expected_status": "answered",
-      "keyword_hints": ["loading", "PDF", "LangChain"],
-      "expected_pages": [0]
+      "keyword_hints": [
+        "loading",
+        "PDF",
+        "LangChain"
+      ],
+      "expected_pages": [
+        0
+      ]
     },
     {
       "id": "lc-006",
       "question": "Which Python class is used to load PDF files in LangChain?",
       "expected_status": "answered",
-      "keyword_hints": ["PyPDFLoader"],
-      "expected_pages": [0]
+      "keyword_hints": [
+        "PyPDFLoader",
+        "PDF"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-007",
+      "question": "What file formats can Document Loaders read?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "PDF",
+        "TXT",
+        "CSV"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-008",
+      "question": "Why do Text Splitters break documents into smaller pieces?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "chunks",
+        "embedding",
+        "documents"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-009",
+      "question": "What does the sample code import to load PDFs?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "PyPDFLoader",
+        "PDF",
+        "loader"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-010",
+      "question": "Why are PDFs important for AI applications according to the document?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "PDF",
+        "documents",
+        "extract"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-011",
+      "question": "What should you try after loading the PDF with PyPDFLoader?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "PyPDFLoader",
+        "chunking",
+        "RAG",
+        "pipeline"
+      ],
+      "expected_pages": []
+    },
+    {
+      "id": "lc-012",
+      "question": "What is retrieval-augmented generation mentioned for?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "RAG",
+        "generation",
+        "pipeline",
+        "retrieval"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-013",
+      "question": "What metadata fields are associated with a Document?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "source",
+        "page"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-014",
+      "question": "How does LangChain make PDF loading straightforward?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "loader",
+        "ecosystem"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-015",
+      "question": "What is the title of the sample PDF document?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "LangChain",
+        "Demo"
+      ],
+      "expected_pages": [
+        0
+      ]
+    },
+    {
+      "id": "lc-016",
+      "question": "What module path is used for PyPDFLoader in the sample code?",
+      "expected_status": "answered",
+      "keyword_hints": [
+        "PyPDFLoader",
+        "document_loaders",
+        "loaders"
+      ],
+      "expected_pages": [
+        0
+      ]
     },
     {
       "id": "lc-oos-001",
@@ -54,6 +215,34 @@
     {
       "id": "lc-oos-002",
       "question": "How do I configure a PostgreSQL connection pool?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "lc-oos-003",
+      "question": "What is the best chocolate chip cookie recipe?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "lc-oos-004",
+      "question": "Who won the 2018 FIFA World Cup?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "lc-oos-005",
+      "question": "How do I install Kubernetes on bare metal?",
+      "expected_status": "not_found",
+      "keyword_hints": [],
+      "expected_pages": []
+    },
+    {
+      "id": "lc-oos-006",
+      "question": "What is the market cap of Apple Inc. today?",
       "expected_status": "not_found",
       "keyword_hints": [],
       "expected_pages": []

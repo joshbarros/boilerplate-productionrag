@@ -13,6 +13,7 @@ import uuid
 from dataclasses import dataclass
 from typing import Any
 
+from ragcore.budget.ledger import estimate_usd
 from ragcore.obs.otel import stage_span
 from ragcore.types import AnswerResult, CitationResult, CostReport
 
@@ -103,9 +104,15 @@ def verify_citations(
         word_overlap_match = overlap >= 0.70
 
         if exact_match or word_overlap_match:
+            raw_doc = passage.get("document_id", uuid.UUID(int=0))
+            if isinstance(raw_doc, str):
+                try:
+                    raw_doc = uuid.UUID(raw_doc)
+                except ValueError:
+                    raw_doc = uuid.UUID(int=0)
             verified.append(
                 CitationResult(
-                    document_id=passage.get("document_id", uuid.UUID(int=0)),
+                    document_id=raw_doc,
                     title=passage.get("title", ""),
                     page=page,
                     excerpt=excerpt,
@@ -136,11 +143,17 @@ def compose_answer(
         status = parsed.status
         answer = parsed.answer
 
+    model_used = getattr(generation_result, "model_used", "") or ""
+    usd = estimate_usd(
+        model_used,
+        generation_result.prompt_tokens,
+        generation_result.completion_tokens,
+    )
     cost = CostReport(
         prompt_tokens=generation_result.prompt_tokens,
         completion_tokens=generation_result.completion_tokens,
-        embed_tokens=0,  # set by caller
-        usd_estimate=0.0,  # free model = $0; set by budget layer in Phase 6
+        embed_tokens=0,  # set by caller when embed usage is known
+        usd_estimate=usd,
     )
 
     return AnswerResult(

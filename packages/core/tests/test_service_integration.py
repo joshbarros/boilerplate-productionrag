@@ -27,7 +27,9 @@ def test_ingest_search_and_ask_pipeline(monkeypatch) -> None:
 
     monkeypatch.setattr(svc, "_get_embedder", lambda: FakeEmbedder())
 
-    def fake_generate_answer(question: str, passages: list[dict], model_override=None):
+    def fake_generate_answer(
+        question: str, passages: list[dict], model_override=None, **_kwargs
+    ):
         excerpt = passages[0]["text"][:80].strip()
         payload = {
             "status": "answered",

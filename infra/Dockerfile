@@ -5,9 +5,11 @@ WORKDIR /app
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Copy project files
-COPY pyproject.toml uv.lock ./
-COPY src/ src/
+# Core package lives under packages/core in the monorepo
+COPY packages/core/pyproject.toml packages/core/uv.lock ./
+COPY packages/core/src/ src/
+COPY packages/core/alembic/ alembic/
+COPY packages/core/alembic.ini ./
 
 # Install dependencies
 RUN uv sync --frozen --no-dev
@@ -16,4 +18,4 @@ RUN uv sync --frozen --no-dev
 EXPOSE 8800 8801
 
 # Default command (overridden by compose)
-CMD ["uv", "run", "uvicorn", "ragcore.api:app", "--host", "0.0.0.0", "--port", "8800"]
+CMD ["uv", "run", "uvicorn", "ragcore.api.app:app", "--host", "0.0.0.0", "--port", "8800"]

@@ -1,0 +1,110 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": { "drawStyle": "line", "fillOpacity": 10 }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "rate(ragcore_spans_total[5m])",
+          "legendFormat": "span rate",
+          "refId": "A"
+        }
+      ],
+      "title": "Span rate (collector)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": { "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "up{job=\"otel-collector\"}",
+          "legendFormat": "collector up",
+          "refId": "A"
+        }
+      ],
+      "title": "Collector health",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "tempo", "uid": "tempo" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 8 },
+      "id": 3,
+      "targets": [
+        {
+          "queryType": "traceqlSearch",
+          "filters": [
+            {
+              "id": "service-name",
+              "operator": "=",
+              "scope": "resource",
+              "tag": "service.name",
+              "value": ["ragcore"],
+              "valueType": "string"
+            }
+          ],
+          "limit": 20,
+          "refId": "A"
+        }
+      ],
+      "title": "Recent ragcore traces",
+      "type": "traces"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "description": "Placeholder for application-exported ask latency once metrics SDK is fully wired.",
+      "fieldConfig": {
+        "defaults": { "unit": "ms" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 18 },
+      "id": 4,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(ragcore_span_duration_milliseconds_bucket[5m])) by (le))",
+          "legendFormat": "p95 span duration",
+          "refId": "A"
+        }
+      ],
+      "title": "p95 span duration (if exported)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
+      "id": 5,
+      "options": {
+        "content": "## production-rag observability\n\n- **Traces**: OTel spans (`@stage_span`) → collector → Tempo\n- **Metrics**: collector Prometheus exporter `:8889`\n- **Dashboards**: auto-provisioned from `infra/grafana/`\n\nEnable export:\n```\nOTEL_ENABLED=true\nOTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317\n```\n\nEval baselines live under `packages/core/evals/results/`.",
+        "mode": "markdown"
+      },
+      "title": "How to read this board",
+      "type": "text"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["rag", "production-rag"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "RAG Overview",
+  "uid": "rag-overview",
+  "version": 1
+}
