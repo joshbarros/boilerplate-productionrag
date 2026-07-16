@@ -47,6 +47,17 @@ test:
 eval:
 	cd $(CORE) && EVAL_TEST=1 uv run pytest tests/test_phase7_evals.py::test_phase7_live_eval_suite -v -s
 
+# Live OpenRouter baseline (writes evals/results/baseline_core_live.json when keys present)
+eval-live:
+	cd $(CORE) && uv run python -m ragcore.evals \
+		--golden tests/fixtures/golden_set.json \
+		--fixture tests/fixtures/langchain_demo.pdf \
+		--mode live \
+		--min-pass-rate 0.50 \
+		--write-baseline evals/results/baseline_core_live.json \
+		--out evals/results/latest_core_live.json \
+		--md-out evals/results/latest_core_live.md
+
 # Deterministic offline eval gate (no network / no API keys)
 eval-gate:
 	cd $(CORE) && uv run python -m ragcore.evals \

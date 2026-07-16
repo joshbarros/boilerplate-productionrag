@@ -73,6 +73,37 @@ def configure_telemetry(*, force: bool = False) -> None:
 
     trace.set_tracer_provider(provider)
     _tracer = trace.get_tracer(settings.otel_service_name)
+
+    # Metrics (OTLP) — best-effort; spans still work if metrics SDK missing
+    try:
+        from opentelemetry import metrics
+        from opentelemetry.sdk.metrics import MeterProvider
+        from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+
+        metric_readers = []
+        try:
+            from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import (
+                OTLPMetricExporter,
+            )
+
+            reader = PeriodicExportingMetricReader(
+                OTLPMetricExporter(
+                    endpoint=endpoint,
+                    insecure=settings.otel_insecure,
+                ),
+                export_interval_millis=15000,
+            )
+            metric_readers.append(reader)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("OTel metrics exporter unavailable: %s", exc)
+
+        if metric_readers:
+            metrics.set_meter_provider(
+                MeterProvider(resource=resource, metric_readers=metric_readers)
+            )
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("OTel metrics SDK unavailable: %s", exc)
+
     _configured = True
 
 

@@ -31,6 +31,7 @@ from ragcore.generation.grounding import (
 from ragcore.generation.prompts import PromptBuilder, default_build_prompt
 from ragcore.generation.router import generate_answer
 from ragcore.ingestion.loader import load_pdf
+from ragcore.obs.metrics import record_ask, record_ingest, timed_ask
 from ragcore.retrieval.fts import InMemoryKeywordSearch, PostgresKeywordSearch
 from ragcore.retrieval.fusion import reciprocal_rank_fusion
 from ragcore.retrieval.rerank import rerank
@@ -254,6 +255,7 @@ class RagService:
             "status": "succeeded",
         }
 
+        record_ingest()
         return {
             "status": "succeeded",
             "fingerprint": loaded.fingerprint,
@@ -317,6 +319,28 @@ class RagService:
         top_k = top_k or settings.top_k
         override = config_override or {}
 
+        with timed_ask() as _timer:
+            result = await self._ask_inner(
+                question, top_k, override, settings
+            )
+        latency = float(_timer.get("elapsed_ms", 0.0))
+        result.latency_ms = result.latency_ms or int(latency)
+        cache_hit = bool(result.config.get("cache_hit"))
+        record_ask(
+            status=result.status,
+            latency_ms=latency,
+            cost_usd=float(result.cost.usd_estimate or 0.0),
+            cache_hit=cache_hit,
+        )
+        return result
+
+    async def _ask_inner(
+        self,
+        question: str,
+        top_k: int,
+        override: dict[str, Any],
+        settings: Any,
+    ) -> AnswerResult:
         # Security gate (FR-014/015)
         if settings.security_enabled and not override.get("skip_security"):
             try:

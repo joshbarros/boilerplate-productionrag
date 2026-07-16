@@ -90,10 +90,33 @@
     },
     {
       "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": { "unit": "short" },
+        "overrides": []
+      },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
       "id": 5,
+      "targets": [
+        {
+          "expr": "sum(ragcore_asks_total) or vector(0)",
+          "legendFormat": "asks total",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(ragcore_ask_cost_usd_total) or vector(0)",
+          "legendFormat": "cost usd",
+          "refId": "B"
+        }
+      ],
+      "title": "Asks + cost (OTLP metrics)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 26 },
+      "id": 6,
       "options": {
-        "content": "## production-rag observability\n\n- **Traces**: OTel spans (`@stage_span`) → collector → Tempo\n- **Metrics**: collector Prometheus exporter `:8889`\n- **Dashboards**: auto-provisioned from `infra/grafana/`\n\nEnable export:\n```\nOTEL_ENABLED=true\nOTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317\n```\n\nEval baselines live under `packages/core/evals/results/`.",
+        "content": "## production-rag observability\n\n- **Traces**: OTel spans (`@stage_span`) → collector → Tempo\n- **App metrics**: `ragcore.asks`, `ragcore.ask.latency`, `ragcore.ask.cost_usd` via OTLP\n- **In-process**: `GET /v1/metrics` (Bearer auth)\n- **Dashboards**: auto-provisioned from `infra/grafana/`\n\n```\nOTEL_ENABLED=true\nOTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317\n```\n\nEval baselines: `packages/core/evals/results/`.",
         "mode": "markdown"
       },
       "title": "How to read this board",

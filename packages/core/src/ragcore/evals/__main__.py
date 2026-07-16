@@ -46,7 +46,8 @@ def main(argv: list[str] | None = None) -> int:
         "--mode",
         choices=("offline", "live"),
         default="offline",
-        help="offline = HashEmbedder + deterministic answers (default)",
+        help="offline = HashEmbedder + deterministic answers (default); "
+        "live = real embedder + LLM (needs API keys)",
     )
     parser.add_argument("--baseline", help="Baseline JSON for regression gate")
     parser.add_argument(

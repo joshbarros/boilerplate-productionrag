@@ -343,6 +343,14 @@ def _register_routes(application: FastAPI, svc: RagService) -> None:
             "rejected_count": result.rejected_count,
         }
 
+    @application.get("/v1/metrics")
+    async def metrics_snapshot(authorization: str | None = Header(None)):
+        """In-process ask/cost counters (also exported via OTLP when enabled)."""
+        _check_auth(authorization)
+        from ragcore.obs.metrics import snapshot
+
+        return snapshot()
+
 
 # Register default routes on the module-level app
 _register_middleware(app)
