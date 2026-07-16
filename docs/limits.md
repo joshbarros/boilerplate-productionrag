@@ -33,9 +33,11 @@ HNSW index; current MVP is in-memory and will not hold that corpus in RAM.
   Enable export with `OTEL_ENABLED=true`.
 - Offline eval gate (CI): HashEmbedder + deterministic answers — retrieval +
   grounding stability, **not** live LLM quality. Live: `make eval` / `EVAL_TEST=1`.
-- Still deferred: 500k-chunk scale validation, always-on metrics histograms
-  (spans land in Tempo today; metric names in Grafana are placeholders until
-  OTLP metrics SDK is fully instrumented).
+- App metrics: in-process `GET /v1/metrics` (asks_total, latency avg, cost_usd,
+  cache hits). OTLP metrics export when `OTEL_ENABLED=true` (`ragcore.asks`,
+  `ragcore.ask.latency`, `ragcore.ask.cost_usd`).
+- Still deferred: 500k-chunk scale validation; committed live OpenRouter
+  baseline (run `make eval-live` with keys and commit the JSON).
 
 
 ## Known Failure Modes

@@ -88,7 +88,7 @@ Reproduce: `cd packages/core && EVAL_TEST=1 uv run pytest tests/test_phase7_eval
 
 ### HTTP API (port 8800)
 
-`/v1/health` · `/v1/ask` · `/v1/search` · `/v1/documents` · `/v1/documents/batch` · `/v1/budget`
+`/v1/health` · `/v1/ask` · `/v1/search` · `/v1/documents` · `/v1/documents/batch` · `/v1/documents/upload` · `/v1/budget` · `/v1/metrics`
 
 ### MCP (port 8801, streamable-http)
 
@@ -153,8 +153,8 @@ Editorial / Linear-app style. Dark surface, monospace for data, serif for emphas
 
 What's **deferred** (in design, not fully built):
 - 500k-chunk scale validation
-- Full OTLP metrics histograms (traces work; Grafana metric panels are provisional)
-- Live OpenRouter baseline committed (schema at `evals/results/baseline_live_schema.json`)
+- Committed live OpenRouter baseline numbers (`make eval-live` then commit JSON)
+- Public deploy smoke of free-tier pin (Caddy + demo corpus)
 
 See [docs/limits.md](docs/limits.md) for graceful-degradation behavior.
 
