@@ -1,0 +1,464 @@
+{
+  "fixture": "regulatory_corpus",
+  "golden_version": "1",
+  "total_cases": 50,
+  "pass_rate": 0.94,
+  "answered_rate": 0.95,
+  "refusal_rate": 1.0,
+  "keyword_hit_rate": 0.9737,
+  "citation_hit_rate": 0.95,
+  "avg_latency_ms": 0.8,
+  "total_cost_usd": 0.0,
+  "results": [
+    {
+      "case_id": "reg-001",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-002",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-003",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-004",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-005",
+      "expected_status": "answered",
+      "actual_status": "not_found",
+      "passed": false,
+      "keyword_hit": false,
+      "citation_hit": false,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-006",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-007",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-008",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-009",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-010",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-011",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-012",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-013",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-014",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-015",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-016",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-017",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-018",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-019",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-020",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-021",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-022",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-023",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-024",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-025",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-026",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-027",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-028",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-029",
+      "expected_status": "answered",
+      "actual_status": "not_found",
+      "passed": false,
+      "keyword_hit": false,
+      "citation_hit": false,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-030",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-031",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-032",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-033",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-034",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-035",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-036",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-037",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-038",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": false,
+      "keyword_hit": false,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-039",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-040",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1
+    },
+    {
+      "case_id": "reg-oos-001",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-002",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-003",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-004",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-005",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-006",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-007",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-008",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-009",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    },
+    {
+      "case_id": "reg-oos-010",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 0
+    }
+  ]
+}

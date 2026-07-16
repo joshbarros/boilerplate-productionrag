@@ -17,10 +17,26 @@ HNSW index; current MVP is in-memory and will not hold that corpus in RAM.
 
 ## Storage
 
-- **MVP**: in-memory `InMemoryVectorStore` + `InMemoryKeywordSearch`. Single-process.
-  No persistence — restart loses indexed documents.
-- **Production path** (deferred): pgvector for vectors, Postgres FTS or BM25 for
-  keywords. Schema is wired (Phase 2 migrations), backends are not.
+- **Default (`VECTOR_BACKEND=memory`)**: in-memory `InMemoryVectorStore` +
+  `InMemoryKeywordSearch`. Single-process. No persistence — restart loses index.
+- **Postgres (`VECTOR_BACKEND=postgres`)**: documents + chunks in Postgres 17,
+  `vector(1536)` with HNSW cosine, generated `tsvector` + GIN FTS. Run
+  `make migrate` (Alembic `0001_initial_schema`) against a pgvector image first.
+- Semantic chunker + **always-on rerank** (`RERANK_ENABLED=true` default).
+  Cross-encoder is on by default (`RERANK_CROSS_ENCODER=true`) with automatic
+  **lexical fallback** when weights cannot load. CI sets
+  `RERANK_CROSS_ENCODER=false` to stay offline.
+- **Qdrant** backend: `VECTOR_BACKEND=qdrant` or dual-write via
+  `QDRANT_BENCH_ENABLED=true` (collection `chunks_bench`). Compose ships Qdrant.
+- **Config matrix**: `make eval-matrix` (chunk × retrieval × rerank × memory[/qdrant]).
+- **OTel stack**: collector + Tempo + Prometheus + Grafana (`make up`, UI :3001).
+  Enable export with `OTEL_ENABLED=true`.
+- Offline eval gate (CI): HashEmbedder + deterministic answers — retrieval +
+  grounding stability, **not** live LLM quality. Live: `make eval` / `EVAL_TEST=1`.
+- Still deferred: 500k-chunk scale validation, always-on metrics histograms
+  (spans land in Tempo today; metric names in Grafana are placeholders until
+  OTLP metrics SDK is fully instrumented).
+
 
 ## Known Failure Modes
 

@@ -163,7 +163,7 @@ async def test_ask_records_cost_in_ledger(
     svc = RagService()
     svc._get_embedder = lambda: FakeEmbedder()  # type: ignore[method-assign]
 
-    def fake_generate(question, passages, model_override=None):
+    def fake_generate(question, passages, model_override=None, **_kwargs):
         payload = {
             "status": "answered",
             "answer": "Budget answer.",
@@ -222,7 +222,7 @@ async def test_budget_status_reflects_ledger(
     svc = RagService()
     svc._get_embedder = lambda: FakeEmbedder()  # type: ignore[method-assign]
 
-    def fake_generate(question, passages, model_override=None):
+    def fake_generate(question, passages, model_override=None, **_kwargs):
         payload = {
             "status": "answered",
             "answer": "OK.",

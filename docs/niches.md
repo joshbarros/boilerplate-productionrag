@@ -43,6 +43,15 @@ production-rag/
 │       ├── corpus/              # reproducible seed corpus
 │       ├── pyproject.toml       # depends on production-rag-core
 │       └── package.json
+│   └── accounting/              # niche 3: US public-company filings (SEC EDGAR)
+│       ├── src/accounting/
+│       │   ├── edgar.py         # EFTS full-text search + Archives fetcher
+│       │   ├── golden.py        # 8-case accounting eval set
+│       │   ├── ingest.py        # CLI: query → 10-Ks → corpus/*.md
+│       │   └── app.py           # FastAPI on :8830 with accounting prompt
+│       ├── corpus/              # reproducible seed corpus
+│       ├── pyproject.toml       # depends on production-rag-core
+│       └── package.json
 │
 ├── docs/                        # design_system, eval_results, limits
 ├── turbo.json                   # orchestrator
@@ -71,17 +80,17 @@ Each niche runs its own FastAPI on a different port behind one Caddy:
 :8800 → core (generic, default landing)
 :8810 → medical
 :8820 → legal
-:8830 → accounting (future)
+:8830 → accounting
 ```
 
 The web app points at the chosen niche via `NEXT_PUBLIC_NICHES` env var:
 
 ```json
 [
-  {"key": "core",     "label": "Generic",  "backend": "http://localhost:8800", "enabled": true},
-  {"key": "medical",  "label": "Medical",  "backend": "http://localhost:8810", "enabled": true},
-  {"key": "legal",    "label": "Legal",    "backend": "http://localhost:8820", "enabled": true},
-  {"key": "accounting","label":"Accounting","backend": "http://localhost:8830", "enabled": false}
+  {"key": "core",      "label": "Generic",   "backend": "http://localhost:8800", "enabled": true},
+  {"key": "medical",   "label": "Medical",   "backend": "http://localhost:8810", "enabled": true},
+  {"key": "legal",     "label": "Legal",     "backend": "http://localhost:8820", "enabled": true},
+  {"key": "accounting","label": "Accounting","backend": "http://localhost:8830", "enabled": true}
 ]
 ```
 
@@ -91,9 +100,9 @@ removing its backend. The frontend stores the active niche in
 
 ## Adding a new niche
 
-1. `cp -r apps/legal apps/<newniche>` and edit the files
+1. `cp -r apps/accounting apps/<newniche>` and edit the files
 2. Write your niche's `golden.py` (8+ Q&A pairs)
-3. Add your data fetcher in `courtlistener.py` → `<source>.py` (EDGAR, …)
+3. Add your data fetcher in `edgar.py` → `<source>.py`
 4. Wire the URL into `NICHES` env var
 5. Run `make eval` to verify the niche works end-to-end
 
@@ -106,4 +115,4 @@ No core changes needed. The engine is stable.
 | core | :8800 | any user-uploaded docs | API_TOKEN | shipped (v0.1.0) |
 | medical | :8810 | PubMed Central (E-utilities) | none | shipped |
 | legal | :8820 | CourtListener (Free Law Project) | optional token | shipped |
-| accounting | :8830 | SEC EDGAR | TBD | planned |
+| accounting | :8830 | SEC EDGAR (full-text + Archives) | none | shipped |

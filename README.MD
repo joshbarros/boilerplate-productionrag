@@ -38,18 +38,20 @@ flowchart LR
 
 ```
 production-rag/
+├── packages/
+│   └── core/            # Python — FastAPI + FastMCP + RAG pipeline (ragcore)
+│       ├── src/ragcore/ # service, api, mcp_server, retrieval, generation, budget, security, evals
+│       ├── tests/
+│       ├── alembic/     # 0001 initial schema (pgvector + FTS)
+│       └── pyproject.toml
 ├── apps/
-│   ├── backend/         # Python — FastAPI + FastMCP + RAG pipeline
-│   │   ├── src/ragcore/ # service, api, mcp_server, retrieval, generation, budget, evals
-│   │   ├── tests/       # 68 unit/integration tests
-│   │   └── pyproject.toml
-│   └── web/             # Next.js 15 — chat UI, ingest, budget dashboard
-│       ├── src/app/     # / · /ingest · /budget
-│       ├── src/components/
-│       └── package.json
-├── docs/                # design system, eval results, limits, linkedin post
-├── turbo.json
-└── package.json         # workspace root
+│   ├── web/             # Next.js 15 — chat UI, ingest, budget, niche switcher
+│   ├── medical/         # PubMed niche (:8810)
+│   ├── legal/           # CourtListener niche (:8820)
+│   └── accounting/       # SEC EDGAR niche (:8830)
+├── infra/               # Dockerfile + docker-compose (pgvector)
+├── docs/
+└── package.json
 ```
 
 ---
@@ -65,7 +67,20 @@ production-rag/
 | cost | $0.00 (free OpenRouter credits) |
 
 Full per-case breakdown: [docs/eval_results_v0.1.0.md](docs/eval_results_v0.1.0.md)
-Reproduce: `pnpm --filter @production-rag/backend test:eval`
+Reproduce: `cd packages/core && EVAL_TEST=1 uv run pytest tests/test_phase7_evals.py -v -s`
+
+## v0.2.x highlights
+
+- `VECTOR_BACKEND=memory|postgres` — Postgres path uses pgvector HNSW + FTS (Alembic `0001`)
+- Response cache (TTL), security gate (rate limit / injection / PII mask)
+- Fixed + **semantic** chunkers; flag-gated **rerank** (lexical default, optional cross-encoder)
+- Multipart **`POST /v1/documents/upload`** + browser drag-and-drop in the web UI
+- Niche apps via `create_app(RagService(prompt_builder=...))` — no monkey-patch
+- `GET /v1/documents/{id}` + MCP `get_document_status`
+- CI: memory unit suite + **Postgres migrate smoke** + **offline eval regression gate**
+- Golden sets: **22** core PDF cases + **50** regulatory (PT-BR BACEN/CVM/LGPD/Simples + EN ASC 606/842)
+- **v0.3**: Qdrant backend + bench dual-write, always-on rerank (cross-encoder w/ lexical fallback),
+  OTel→Tempo/Prometheus/Grafana compose, offline **config matrix** (`make eval-matrix`)
 
 ---
 
@@ -136,10 +151,36 @@ Editorial / Linear-app style. Dark surface, monospace for data, serif for emphas
 | 8 | Polish + ship | ✓ |
 | 9 | **Monorepo (Turborepo + pnpm) + Next.js frontend** | ✓ |
 
-What's **deferred** (in design, not built):
-- pgvector backend (in-memory now)
-- bge-reranker cross-encoder
-- Qdrant backend comparison
+What's **deferred** (in design, not fully built):
 - 500k-chunk scale validation
+- Full OTLP metrics histograms (traces work; Grafana metric panels are provisional)
+- Live OpenRouter baseline committed (schema at `evals/results/baseline_live_schema.json`)
 
 See [docs/limits.md](docs/limits.md) for graceful-degradation behavior.
+
+### Observability (compose)
+
+```bash
+make up     # postgres + qdrant + otel + prometheus + tempo + grafana
+make obs    # print URLs
+# Grafana :3001 (admin/admin) · Prometheus :9090 · Qdrant :6333 · OTLP :4317
+```
+
+### Config matrix
+
+```bash
+make eval-matrix
+# → packages/core/evals/results/matrix_core_offline.md
+```
+
+### Postgres mode
+
+```bash
+# start pgvector
+docker compose -f infra/docker-compose.yml up -d postgres
+# migrate
+cd packages/core && uv run alembic upgrade head
+# run with durable store
+VECTOR_BACKEND=postgres API_TOKEN=changeme \
+  uv run uvicorn ragcore.api.app:app --port 8800
+```

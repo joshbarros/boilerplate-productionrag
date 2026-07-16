@@ -1,0 +1,6 @@
+{
+  "name": "@production-rag/accounting",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Accounting niche — US public-company filings via SEC EDGAR"
+}

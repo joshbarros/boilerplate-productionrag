@@ -1,0 +1,17 @@
+{
+  "_comment": "Template for a live OpenRouter baseline (EVAL_TEST=1). Not enforced in CI. Copy structure from offline baselines after a live run.",
+  "fixture": "langchain_demo.pdf",
+  "golden_version": "2",
+  "mode": "live",
+  "provider": "openrouter",
+  "model": "set-after-live-run",
+  "total_cases": 22,
+  "pass_rate": null,
+  "answered_rate": null,
+  "refusal_rate": null,
+  "keyword_hit_rate": null,
+  "citation_hit_rate": null,
+  "avg_latency_ms": null,
+  "total_cost_usd": null,
+  "how_to_generate": "EVAL_TEST=1 uv run python -m ragcore.evals --golden tests/fixtures/golden_set.json --fixture tests/fixtures/langchain_demo.pdf --mode live --write-baseline evals/results/baseline_core_live.json --min-pass-rate 0.50"
+}

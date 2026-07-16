@@ -6,11 +6,25 @@ services:
     ports:
       - "8800:8800"
       - "8801:8801"
+    environment:
+      VECTOR_BACKEND: postgres
+      PGVECTOR_CONNECTION: postgresql+psycopg://ragcore:ragcore@postgres:5432/ragcore
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_BENCH_ENABLED: "true"
+      RERANK_ENABLED: "true"
+      RERANK_CROSS_ENCODER: "true"
+      OTEL_ENABLED: "true"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_INSECURE: "true"
     env_file:
       - ../.env
     depends_on:
       postgres:
         condition: service_healthy
+      qdrant:
+        condition: service_started
+      otel-collector:
+        condition: service_started
     restart: unless-stopped
 
   postgres:
@@ -30,5 +44,70 @@ services:
       retries: 10
     restart: unless-stopped
 
+  qdrant:
+    image: qdrant/qdrant:v1.13.2
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.114.0
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8889:8889"   # Prometheus exporter
+    depends_on:
+      - tempo
+    restart: unless-stopped
+
+  tempo:
+    image: grafana/tempo:2.6.1
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml:ro
+      - tempo_data:/tmp/tempo
+    ports:
+      - "3200:3200"
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom_data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - otel-collector
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.3.1
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+      - tempo
+    restart: unless-stopped
+
 volumes:
   pgdata:
+  qdrant_data:
+  tempo_data:
+  prom_data:
+  grafana_data:

@@ -139,16 +139,16 @@ def test_scorer_out_of_scope_wrong_answer() -> None:
 def test_load_golden_parses_all_cases() -> None:
     fixture_name, version, cases = _load_golden(_GOLDEN)
     assert fixture_name == "langchain_demo.pdf"
-    assert version == "1"
-    assert len(cases) == 8  # 6 in-scope + 2 out-of-scope
+    assert version == "2"
+    assert len(cases) == 22  # 16 in-scope + 6 out-of-scope
 
 
 def test_load_golden_in_scope_count() -> None:
     _, _, cases = _load_golden(_GOLDEN)
     in_scope = [c for c in cases if c.expected_status == "answered"]
     out_scope = [c for c in cases if c.expected_status == "not_found"]
-    assert len(in_scope) == 6
-    assert len(out_scope) == 2
+    assert len(in_scope) == 16
+    assert len(out_scope) == 6
 
 
 # ─── Runner unit test (mocked service) ───────────────────────────────────────
@@ -184,7 +184,7 @@ async def test_runner_mocked_perfect_score() -> None:
         mock_run.return_value = _summarise("langchain_demo.pdf", "1", results)
         summary = await runner.run()
 
-    assert summary.total_cases == 8
+    assert summary.total_cases == 22
     assert summary.pass_rate == 1.0
     assert summary.answered_rate == 1.0
     assert summary.refusal_rate == 1.0

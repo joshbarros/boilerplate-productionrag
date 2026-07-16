@@ -31,6 +31,18 @@ class RetrievalMode(StrEnum):
     KEYWORD = "keyword"
 
 
+class VectorBackend(StrEnum):
+    MEMORY = "memory"
+    POSTGRES = "postgres"
+    QDRANT = "qdrant"
+
+
+class ChunkingStrategy(StrEnum):
+    RECURSIVE = "recursive"
+    FIXED = "fixed"
+    SEMANTIC = "semantic"
+
+
 class Settings(BaseSettings):
     """All configuration loaded from environment variables / .env file."""
 
@@ -67,32 +79,49 @@ class Settings(BaseSettings):
     retrieval_mode: RetrievalMode = RetrievalMode.HYBRID
     top_k: int = 8
     rrf_k: int = 60
-    rerank_enabled: bool = False
+    # Always-on rerank stage (cross-encoder when available; lexical fallback)
+    rerank_enabled: bool = True
+    rerank_cross_encoder: bool = True
     rerank_model: str = "BAAI/bge-reranker-v2-m3"
 
     # ─── Vector backends ───
+    # memory | postgres | qdrant
+    vector_backend: VectorBackend = VectorBackend.MEMORY
     pgvector_connection: str = (
         "postgresql+psycopg://ragcore:ragcore@localhost:5432/ragcore"
     )
     qdrant_url: str = "http://localhost:6333"
+    qdrant_collection: str = "chunks"
+    # Dual-write vectors to Qdrant when primary backend is memory/postgres
     qdrant_bench_enabled: bool = False
+
+    # ─── Chunking ───
+    chunking_strategy: ChunkingStrategy = ChunkingStrategy.RECURSIVE
+    chunk_size: int = 1000
+    chunk_overlap: int = 200
+    semantic_similarity_threshold: float = 0.35
 
     # ─── Budget ───
     daily_budget_usd: float = 5.00
     query_budget_usd: float = 0.10
     cache_ttl_seconds: int = 3600
+    cache_enabled: bool = True
 
     # ─── Security ───
     api_token: str = Field(default="changeme")
     rate_limit_per_minute: int = 30
+    security_enabled: bool = True
 
     # ─── Feature flags ───
     local_llm_enabled: bool = True
     ocr_enabled: bool = True
 
     # ─── Observability ───
+    otel_enabled: bool = False
     otel_exporter_otlp_endpoint: str = "http://localhost:4317"
     otel_service_name: str = "ragcore"
+    otel_insecure: bool = True
+    otel_console_export: bool = False
 
     # ─── Server ───
     api_host: str = "0.0.0.0"

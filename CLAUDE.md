@@ -1,35 +1,48 @@
 # production-rag — agent context
 
-Self-hosted, citation-grounded document QA for messy regulatory/fiscal PDFs (PT-BR + EN). Spec-driven repo: **read the governing docs before writing code.**
+Self-hosted, citation-grounded document QA for messy regulatory/fiscal PDFs (PT-BR + EN).
 
-## Read in this order
-1. `.specify/memory/constitution.md` — 7 non-negotiable principles (evals gate merges; compose-first self-host; OTel not vendor-lock; hybrid retrieval; cost-as-feature; security gate; framework-light)
-2. `specs/001-regulatory-doc-qa/spec.md` — 5 user stories, 18 FRs, 8 success criteria
-3. `specs/001-regulatory-doc-qa/plan.md` — stack, structure, constitution check
-4. `specs/001-regulatory-doc-qa/research.md` — 15 pinned decisions (D1–D15) with rationale; do not relitigate without updating the doc
-5. `specs/001-regulatory-doc-qa/tasks.md` — **the work queue. Execute in order, T001 first.**
+## Layout
+```
+packages/core/          # ragcore engine (FastAPI + MCP + pipeline)
+apps/web/               # Next.js UI
+apps/medical|legal|accounting/
+infra/                  # docker-compose: postgres, qdrant, otel, prom, tempo, grafana
+```
 
-## Stack (pinned — see research.md)
-Python 3.12 + uv · FastAPI + FastMCP · PostgreSQL 17 + pgvector (Qdrant = benchmark arm only) · Postgres FTS + RRF hybrid · Docling/PyMuPDF + Tesseract (por+eng) · anthropic (haiku default) / openai / Ollama qwen3:8b fallback · sentence-transformers (bge-m3, bge-reranker-v2-m3) · SQLAlchemy + Alembic · OTel → Prometheus/Tempo/Grafana · pytest
+## Stack
+Python 3.12 + uv · FastAPI + FastMCP · Postgres/pgvector · Qdrant · hybrid RRF ·
+rerank (cross-encoder + lexical fallback) · Docling/PyMuPDF · OpenRouter/… ·
+OTel → collector → Tempo/Prometheus/Grafana · pytest · Next.js 15
 
 ## Hard rules
-- **NO LangChain/LangGraph in `src/`** — `experiments/` only (constitution VII)
-- `api/` and `mcp_server/` call ONLY `src/ragcore/service.py` — never pipeline modules directly
-- `answered` responses MUST carry ≥1 verified citation or be downgraded to `not_found`; never fabricate
-- Budget check happens BEFORE any external call; rejected = $0 spent
-- Every pipeline stage wrapped in `@stage_span` with token/cost attributes
-- Embedding model id pinned per chunk; mixed-model search must raise
-- Secrets only in `.env` (gitignored); fixtures must contain zero real PII
-- **Every phase in tasks.md ends with its commit task — do not batch phases**
+- NO LangChain in `src/`
+- `api/` and `mcp_server/` call ONLY `ragcore.service`
+- answered ⇒ ≥1 verified citation else `not_found`
+- Budget pre-check before LLM
+- Embedding model pinned; mixed-model search raises
+
+## Backends
+| `VECTOR_BACKEND` | Behavior |
+| --- | --- |
+| `memory` | default, CI |
+| `postgres` | pgvector + FTS |
+| `qdrant` | Qdrant vectors + in-memory keyword |
+
+`QDRANT_BENCH_ENABLED=true` dual-writes to collection `chunks_bench`.
+
+## Rerank
+`RERANK_ENABLED=true` (default). `RERANK_CROSS_ENCODER=true` (default) with
+lexical fallback. CI uses `RERANK_CROSS_ENCODER=false`.
 
 ## Commands
 ```bash
-uv sync                                   # deps
-make up / make down                       # compose stack (infra/docker-compose.yml)
-make test                                 # pytest
-make eval                                 # eval suite → evals/results/ (regression-gated)
-alembic upgrade head                      # migrations
+make test
+make eval-gate
+make eval-matrix
+make up / make obs
 ```
 
-## Current state
-Specs complete (constitution + spec + plan + research + data-model + contracts + quickstart + tasks). **Implementation not started — next action is T001 in tasks.md.**
+## Current state (v0.3)
+Cite-or-refuse MVP, Postgres path, niches, multipart upload, offline golden
+gate (22+50), Qdrant arm, always-on rerank, OTel compose stack, config matrix.

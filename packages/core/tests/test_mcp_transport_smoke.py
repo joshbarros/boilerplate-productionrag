@@ -36,7 +36,7 @@ def _build_isolated_mcp(monkeypatch, fixture_path: str | None = None):
     svc = RagService()
     svc._get_embedder = lambda: FakeEmbedder()  # type: ignore[method-assign]
 
-    def fake_generate(question, passages, model_override=None):
+    def fake_generate(question, passages, model_override=None, **_kwargs):
         excerpt = (passages[0]["text"][:60].strip()) if passages else ""
         payload = {
             "status": "answered" if passages else "not_found",
@@ -70,7 +70,7 @@ def _build_isolated_mcp(monkeypatch, fixture_path: str | None = None):
 
 
 @pytest.mark.asyncio
-async def test_list_tools_returns_all_four(monkeypatch) -> None:
+async def test_list_tools_returns_expected_set(monkeypatch) -> None:
     _build_isolated_mcp(monkeypatch)
 
     async with Client(mcp_app.mcp) as client:
@@ -83,6 +83,7 @@ async def test_list_tools_returns_all_four(monkeypatch) -> None:
         "ingest_document",
         "health",
         "budget",
+        "get_document_status",
     }
 
 
