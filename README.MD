@@ -56,18 +56,21 @@ production-rag/
 
 ---
 
-## Latest eval — v0.1.0
+## Latest eval — v0.3.0 (live)
 
 | Metric | Value |
 | --- | --- |
-| pass_rate | **75.0%** (6/8) |
-| answered_rate | 66.7% (4/6 in-scope) |
-| refusal_rate | **100.0%** (2/2 out-of-scope) |
-| avg_latency | 2.9s |
-| cost | $0.00 (free OpenRouter credits) |
+| pass_rate | **86.4%** (19/22) |
+| answered_rate | 81.2% (13/16 in-scope) |
+| refusal_rate | **100.0%** (6/6 out-of-scope) |
+| avg_latency | 4.2s |
+| cost | $0.00 (free OpenRouter model) |
+| model | `nvidia/nemotron-3-super-120b-a12b:free` |
 
-Full per-case breakdown: [docs/eval_results_v0.1.0.md](docs/eval_results_v0.1.0.md)
-Reproduce: `cd packages/core && EVAL_TEST=1 uv run pytest tests/test_phase7_evals.py -v -s`
+Full breakdown: [docs/eval_results_v0.3.0.md](docs/eval_results_v0.3.0.md) · baseline JSON: `packages/core/evals/results/baseline_core_live.json`  
+Reproduce: `make eval-live` (needs `OPENROUTER_API_KEY` + `OPENAI_API_KEY`)
+
+Offline CI gate (no network): core **95.5%** · regulatory **94.0%** — `make eval-gate`
 
 ## v0.2.x highlights
 

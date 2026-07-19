@@ -6,6 +6,7 @@ Committed baselines power the **offline regression gate** (`make eval-gate` / CI
 | --- | --- | --- |
 | `baseline_core_offline.json` | `tests/fixtures/golden_set.json` (22 cases) | HashEmbedder + deterministic cite-or-refuse |
 | `baseline_regulatory_offline.json` | `tests/fixtures/golden_regulatory.json` (50 cases) | Same, multi-doc PT-BR/EN regulatory corpus |
+| `baseline_core_live.json` | golden_set v2 (22 cases) | **Live** OpenRouter free model + OpenAI embeddings — **86.4%** (2026-07-19) |
 
 ## Rules
 

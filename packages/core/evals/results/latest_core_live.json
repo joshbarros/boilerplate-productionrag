@@ -1,0 +1,212 @@
+{
+  "fixture": "langchain_demo.pdf",
+  "golden_version": "2",
+  "total_cases": 22,
+  "pass_rate": 0.8636,
+  "answered_rate": 0.8125,
+  "refusal_rate": 1.0,
+  "keyword_hit_rate": 1.0,
+  "citation_hit_rate": 0.8125,
+  "avg_latency_ms": 4208.9,
+  "total_cost_usd": 0.0,
+  "results": [
+    {
+      "case_id": "lc-001",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1751
+    },
+    {
+      "case_id": "lc-002",
+      "expected_status": "answered",
+      "actual_status": "not_found",
+      "passed": false,
+      "keyword_hit": true,
+      "citation_hit": false,
+      "latency_ms": 1970
+    },
+    {
+      "case_id": "lc-003",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 4478
+    },
+    {
+      "case_id": "lc-004",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1934
+    },
+    {
+      "case_id": "lc-005",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1590
+    },
+    {
+      "case_id": "lc-006",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 2041
+    },
+    {
+      "case_id": "lc-007",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 2667
+    },
+    {
+      "case_id": "lc-008",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 2835
+    },
+    {
+      "case_id": "lc-009",
+      "expected_status": "answered",
+      "actual_status": "not_found",
+      "passed": false,
+      "keyword_hit": false,
+      "citation_hit": false,
+      "latency_ms": 1769
+    },
+    {
+      "case_id": "lc-010",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 3307
+    },
+    {
+      "case_id": "lc-011",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 2144
+    },
+    {
+      "case_id": "lc-012",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1367
+    },
+    {
+      "case_id": "lc-013",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1619
+    },
+    {
+      "case_id": "lc-014",
+      "expected_status": "answered",
+      "actual_status": "not_found",
+      "passed": false,
+      "keyword_hit": false,
+      "citation_hit": false,
+      "latency_ms": 766
+    },
+    {
+      "case_id": "lc-015",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1484
+    },
+    {
+      "case_id": "lc-016",
+      "expected_status": "answered",
+      "actual_status": "answered",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 2033
+    },
+    {
+      "case_id": "lc-oos-001",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1003
+    },
+    {
+      "case_id": "lc-oos-002",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 2358
+    },
+    {
+      "case_id": "lc-oos-003",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1963
+    },
+    {
+      "case_id": "lc-oos-004",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 971
+    },
+    {
+      "case_id": "lc-oos-005",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 51162
+    },
+    {
+      "case_id": "lc-oos-006",
+      "expected_status": "not_found",
+      "actual_status": "not_found",
+      "passed": true,
+      "keyword_hit": true,
+      "citation_hit": true,
+      "latency_ms": 1383
+    }
+  ]
+}

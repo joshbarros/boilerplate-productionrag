@@ -36,8 +36,10 @@ HNSW index; current MVP is in-memory and will not hold that corpus in RAM.
 - App metrics: in-process `GET /v1/metrics` (asks_total, latency avg, cost_usd,
   cache hits). OTLP metrics export when `OTEL_ENABLED=true` (`ragcore.asks`,
   `ragcore.ask.latency`, `ragcore.ask.cost_usd`).
-- Still deferred: 500k-chunk scale validation; committed live OpenRouter
-  baseline (run `make eval-live` with keys and commit the JSON).
+- Live OpenRouter baseline committed: `baseline_core_live.json` at **86.4%**
+  pass / **100%** refusal (see `docs/eval_results_v0.3.0.md`). Re-run:
+  `make eval-live`.
+- Still deferred: 500k-chunk scale validation; public VPS deploy smoke.
 
 
 ## Known Failure Modes
